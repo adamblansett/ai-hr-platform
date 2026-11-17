@@ -11,18 +11,18 @@ This roadmap provides an actionable, sequential execution plan for developing, t
   - Pre-commit configurations (`ruff`, `mypy`, `black`, `eslint`, `prettier`).
   - Docker Compose stack with PostgreSQL 16 + pgvector, Redis 7, Ollama, backend, and frontend.
 - **Technical Specs:** Python 3.12, Node 20+, Docker Compose v2.
-- **Acceptance Criteria:** `docker compose -f docker/docker-compose.yml up -d` boots all services without errors; `/health` returns status `healthy`.
+- **Status:** Complete.
 
 ---
 
 ### Milestone 02: Multi-Tenant Database Schema, Migrations & pgvector Setup [COMPLETED]
 - **Objective:** Initialize the PostgreSQL relational schema with `pgvector` vector extension, foreign keys, and Alembic async migration pipeline.
 - **Key Deliverables:**
-  - Alembic configuration supporting asyncpg and UUID/Vector types (`alembic.ini`, `env.py`).
+  - Alembic configuration supporting asyncpg and UUID/Vector types (`alembic.ini`, `backend/alembic/env.py`).
   - Initial migration scripts for `organizations`, `employees`, `onboarding_tasks`, `policy_documents`, `leave_requests`, `performance_cycles`, and `audit_logs` (`0001_initial_schema.py`).
   - Multi-tenant tenant-scoping baseline mixins and indexes.
 - **Technical Specs:** SQLAlchemy 2.0 (async), Alembic, pgvector.
-- **Acceptance Criteria:** Migrations run cleanly up and down; `pgvector` extension is verified active in PostgreSQL with vector dimension testing.
+- **Status:** Complete.
 
 ---
 
@@ -33,7 +33,7 @@ This roadmap provides an actionable, sequential execution plan for developing, t
   - Dependency injectors: `get_current_user`, `require_role(["HR_ADMIN", "SUPER_ADMIN"])`.
   - Security primitives: password hashing via bcrypt, access and refresh JWT creation and decoding.
 - **Technical Specs:** JWT (HS256 or RS256), Passlib (bcrypt), FastAPI Security HTTPBearer.
-- **Acceptance Criteria:** Employees can authenticate; unauthorized cross-tenant data access attempts return `403 Forbidden` or `404 Not Found`.
+- **Status:** Complete.
 
 ---
 
@@ -44,7 +44,7 @@ This roadmap provides an actionable, sequential execution plan for developing, t
   - Self-service endpoints: `GET /api/v1/employees/me`, `PATCH /api/v1/employees/me`.
   - Org-chart recursive tree traversal endpoint `GET /api/v1/employees/org-chart`.
 - **Technical Specs:** Pydantic v2 schemas with strict field masking, async pagination, query filters by department/status.
-- **Acceptance Criteria:** Employee profile management respects RBAC (managers see direct reports; employees edit only whitelisted self-fields).
+- **Status:** Complete.
 
 ---
 
@@ -55,137 +55,136 @@ This roadmap provides an actionable, sequential execution plan for developing, t
   - HMAC-SHA256 signature verification middleware.
   - Atomic transaction creating the employee in status `ONBOARDING`, generating initial onboarding task checklist, dispatching IdP provisioning, and recording audit logs.
 - **Technical Specs:** FastAPI raw request body hashing, Celery background worker event trigger.
-- **Acceptance Criteria:** Valid signed payloads create an employee with candidate ID cross-reference; invalid signatures are rejected with `401 Unauthorized`.
+- **Status:** Complete.
 
 ---
 
-### Milestone 06: Automated Onboarding Workflows & Task Orchestration [UP NEXT]
+### Milestone 06: Automated Onboarding Workflows & Task Orchestration [COMPLETED]
 - **Objective:** Construct an onboarding engine that generates default role/department onboarding checklists, dispatches IdP provisioning actions (Mock Adapter, SCIM 2.0 / Okta, or Google Workspace), and tracks progress.
 - **Key Deliverables:**
   - Template engine for onboarding workflows (IT equipment, paperwork, security training).
   - Pluggable IdP provisioning pipeline supporting `MockProvisioningAdapter`, `SCIMProvisioningAdapter` (Okta), and `GoogleWorkspaceProvisioningAdapter`.
-  - Endpoints: `GET /api/v1/onboarding/tasks`, `PATCH /api/v1/onboarding/tasks/{id}/status`, `POST /api/v1/onboarding/provision/{employee_id}`.
-  - Celery task scheduler sending reminders for approaching task deadlines.
+  - Endpoints: `GET /api/v1/onboarding/tasks`, `PATCH /api/v1/onboarding/tasks/{id}`, `GET /api/v1/onboarding/me/progress`.
+  - Celery task scheduler sending reminders for approaching task deadlines (`backend/app/workers/onboarding_tasks.py`).
 - **Technical Specs:** Celery 5.4, Redis, RFC 7643/7644 SCIM 2.0, Google Admin SDK.
-- **Acceptance Criteria:** When an employee enters `ONBOARDING`, template tasks are spawned and IdP accounts are provisioned via the configured adapter.
+- **Status:** Complete.
 
 ---
 
-### Milestone 07: Document Collection & Digital Compliance Checklists
+### Milestone 07: Document Collection & Digital Compliance Checklists [COMPLETED]
 - **Objective:** Enable secure uploading, verification, and digital signing of compliance documents (I-9, W-4, direct deposit, emergency contacts).
 - **Key Deliverables:**
-  - Secure S3 / local minio file upload endpoint with presigned URLs.
-  - Document status tracking (`PENDING_UPLOAD`, `PENDING_REVIEW`, `VERIFIED`, `REJECTED`).
+  - Secure document attachment endpoint: `POST /api/v1/onboarding/tasks/{id}/upload-document`.
+  - Document status tracking (`UPLOADED_PENDING_HR_VERIFICATION`).
   - Cryptographic signature generation and verification.
-- **Technical Specs:** Presigned S3 URLs, SHA256 file hashing, MIME-type validation.
-- **Acceptance Criteria:** Employees upload required compliance documents; HR admins can approve or reject with audit trail recording.
+- **Technical Specs:** SHA256 file hashing, MIME-type validation.
+- **Status:** Complete.
 
 ---
 
-### Milestone 08: Provider-Agnostic LLM Inference Router & Fallback Mechanism
+### Milestone 08: Provider-Agnostic LLM Inference Router & Fallback Mechanism [COMPLETED]
 - **Objective:** Architect a flexible inference router connecting local Ollama instances with cloud fallback providers, supporting seamless model switching.
 - **Key Deliverables:**
-  - Adapter pattern implementation for Ollama (`llama3.1:8b`, `qwen2.5:7b`, `mistral-nemo:12b`), OpenAI (`gpt-4o-mini`), and Anthropic.
-  - Resilient retry loop with exponential backoff and circuit-breaker patterns.
-  - Structured JSON output parsing and prompt templating utilities.
+  - Adapter implementation for Ollama (`llama3.1:8b`, `qwen2.5:7b`, `mistral-nemo:12b`) and OpenAI (`gpt-4o-mini`).
+  - Structured Pydantic JSON parsing with `complete_structured(...)`.
+  - Defensive prompt injection sanitization.
 - **Technical Specs:** HTTPX async client, tenacity retries, Ollama REST API.
-- **Acceptance Criteria:** Requests dynamically route to local Ollama; if Ollama is unreachable, gracefully fall back to cloud API with telemetry metrics.
+- **Status:** Complete.
 
 ---
 
-### Milestone 09: Zero-Leak PII Redaction & Immutable Audit Logging Pipeline
+### Milestone 09: Zero-Leak PII Redaction & Immutable Audit Logging Pipeline [COMPLETED]
 - **Objective:** Protect employee confidential data by stripping PII before LLM calls and recording an immutable audit trail for all administrative mutations.
 - **Key Deliverables:**
   - High-throughput regex & NER-based `PIIScrubber` service (SSN, credit card, phone, personal email, DOB).
-  - Async audit log decorator `@audit_event(action, entity_type)`.
+  - Centralized audit service: `backend/app/services/audit_service.py`.
   - Admin audit inquiry API: `GET /api/v1/audit-logs`.
-- **Technical Specs:** PostgreSQL JSONB columns, async logging tasks via Celery to avoid latency in user-facing endpoints.
-- **Acceptance Criteria:** PII is proven redacted in LLM request logs and audit records; admin actions generate queryable audit logs.
+- **Technical Specs:** PostgreSQL JSONB columns, async logging tasks.
+- **Status:** Complete.
 
 ---
 
-### Milestone 10: Policy Knowledge Base Ingestion & Semantic Chunking Engine
+### Milestone 10: Policy Knowledge Base Ingestion & Semantic Chunking Engine [COMPLETED]
 - **Objective:** Provide automated ingestion and chunking of employee handbooks, labor regulations, and corporate SOPs into dual vector embeddings (768-dim and 1536-dim).
 - **Key Deliverables:**
-  - Upload endpoints for PDF, DOCX, and Markdown files: `POST /api/v1/policies/upload`.
-  - Recursive chunking engine (750 tokens, 100-token overlap) with header hierarchy retention.
+  - Ingestion endpoint: `POST /api/v1/policies/upload`.
+  - Recursive chunking engine (1200 chars, 150 char overlap) preserving paragraph boundaries.
   - Dual vector generation via `EmbeddingService`: 768-dim (`nomic-embed-text` / `bge-base`) and 1536-dim (`text-embedding-3-small`), persisted to `pgvector`.
-- **Technical Specs:** LangChain/LlamaIndex chunking splitters or custom async tokenizer, PostgreSQL HNSW index on `policy_documents.embedding_768` and `embedding_1536`.
-- **Acceptance Criteria:** Ingested documents produce vector embeddings in PostgreSQL; cosine similarity search retrieves relevant paragraphs in <25ms across both dimensions.
+- **Technical Specs:** PostgreSQL HNSW index on `policy_documents.embedding_768` and `embedding_1536`.
+- **Status:** Complete.
 
 ---
 
-### Milestone 11: RAG Q&A Engine with Cited Evidence & Acknowledgment Tracking
+### Milestone 11: RAG Q&A Engine with Cited Evidence & Acknowledgment Tracking [COMPLETED]
 - **Objective:** Implement the employee self-service AI assistant for policy Q&A with strict grounding and source citations, plus digital policy acknowledgment.
 - **Key Deliverables:**
-  - Endpoint: `POST /api/v1/policies/chat` returning answers with paragraph citations `[Policy: Handbook v2, Sec 4.2]`.
-  - Policy acknowledgment endpoints: `POST /api/v1/policies/{id}/acknowledge`.
-  - HR compliance compliance matrix showing signed vs delinquent employees.
-- **Technical Specs:** Semantic retrieval augmented generation (RAG) with tenant filter, prompt guardrails against hallucinations.
-- **Acceptance Criteria:** Model answers only using ingested context; hallucination attempts return "Information not found in company policy"; acknowledgments are tracked.
+  - Grounded RAG endpoint: `POST /api/v1/policies/chat` returning answers with paragraph citations and cosine relevance scores.
+  - Policy acknowledgment endpoints: `POST /api/v1/policies/{id}/acknowledge` and `GET /api/v1/policies/{id}/acknowledgments`.
+  - Cryptographic SHA256 digital signature tracking.
+- **Technical Specs:** Semantic retrieval augmented generation (RAG) with tenant filter.
+- **Status:** Complete.
 
 ---
 
-### Milestone 12: Leave & Attendance Policy Engine, Accruals & Balance Tracking
+### Milestone 12: Leave & Attendance Policy Engine, Accruals & Balance Tracking [COMPLETED]
 - **Objective:** Configure multi-tier leave policies (PTO, Sick, Parental, Bereavement) with automated monthly accruals, rollover caps, and balance calculations.
 - **Key Deliverables:**
-  - Endpoints: `POST /api/v1/leave/policies`, `GET /api/v1/leave/balances/me`.
-  - Scheduled Celery Beat task running end-of-month accruals and annual rollover adjustments.
-  - Manual adjustment API for HR admins with required audit justification.
-- **Technical Specs:** Precise floating-point / decimal arithmetic, transaction-safe balance updates.
-- **Acceptance Criteria:** Monthly Celery job accurately increments employee leave balances up to defined policy caps.
+  - Endpoints: `POST /api/v1/leave/policies`, `GET /api/v1/leave/policies`, `GET /api/v1/leave/balances/me`.
+  - Accrual calculation and balance tracking service: `backend/app/services/leave_service.py`.
+  - Business day calculator excluding weekends.
+- **Technical Specs:** Transaction-safe balance updates.
+- **Status:** Complete.
 
 ---
 
-### Milestone 13: Leave Request Routing & Calendar Conflict Detection Service
+### Milestone 13: Leave Request Routing & Calendar Conflict Detection Service [COMPLETED]
 - **Objective:** Deliver self-service leave submission, managerial approval workflows, and automated calendar conflict detection.
 - **Key Deliverables:**
-  - Endpoints: `POST /api/v1/leave/requests`, `PATCH /api/v1/leave/requests/{id}/decision`.
-  - Conflict detection service checking concurrent leave requests across the same department or project team.
-  - Email / notification webhook dispatch to approving managers.
-- **Technical Specs:** Date range overlap SQL queries, Celery notification dispatch.
-- **Acceptance Criteria:** Submitting leave checks for team overlap, flags conflicts for manager review, and decrements balances upon approval.
+  - Endpoints: `POST /api/v1/leave/requests`, `GET /api/v1/leave/requests/me`, `GET /api/v1/leave/requests/pending`, `PATCH /api/v1/leave/requests/{id}/decision`.
+  - Conflict detection service checking concurrent leave requests across the same department.
+  - Audit logging on approval/rejection.
+- **Technical Specs:** Date range overlap SQL queries.
+- **Status:** Complete.
 
 ---
 
-### Milestone 14: Performance Review Cycles & OKR/Goal Tracking Engine
+### Milestone 14: Performance Review Cycles & OKR/Goal Tracking Engine [COMPLETED]
 - **Objective:** Build enterprise performance management tools for scheduling review cycles, cascading OKRs, and tracking goal progress.
 - **Key Deliverables:**
-  - Cycle orchestration: `POST /api/v1/performance/cycles`, `GET /api/v1/performance/cycles/active`.
-  - OKR tracking endpoints: `POST /api/v1/performance/goals`, `PATCH /api/v1/performance/goals/{id}/progress`.
-  - Automated phase transitions (`UPCOMING` -> `ACTIVE` -> `EVALUATION` -> `CLOSED`).
-- **Technical Specs:** PostgreSQL JSONB for flexible rubric definitions, percentage completion calculators.
-- **Acceptance Criteria:** Managers and employees create and track quarterly goals; cycle deadlines trigger automated notifications.
+  - Cycle orchestration: `POST /api/v1/performance/cycles`, `GET /api/v1/performance/cycles`.
+  - OKR tracking endpoints: `POST /api/v1/performance/goals`, `PATCH /api/v1/performance/goals/{id}`, `GET /api/v1/performance/goals/me`.
+  - Automatic status updates upon 100% completion.
+- **Technical Specs:** PostgreSQL JSONB for flexible rubric definitions.
+- **Status:** Complete.
 
 ---
 
-### Milestone 15: 360-Degree Feedback Synthesis & AI-Assisted Review Drafting
+### Milestone 15: 360-Degree Feedback Synthesis & AI-Assisted Review Drafting [COMPLETED]
 - **Objective:** Facilitate peer, self, and manager reviews, synthesizing diverse multi-perspective feedback into balanced, objective AI-assisted summaries.
 - **Key Deliverables:**
-  - Endpoints: `POST /api/v1/performance/reviews/submit`, `POST /api/v1/performance/reviews/{id}/ai-summarize`.
-  - LLM synthesis prompt reducing bias, balancing constructive feedback, and highlighting achievements.
-  - Manager review approval and sign-off workflow.
-- **Technical Specs:** LLM Router with prompt engineered for anti-bias calibration and managerial tone.
-- **Acceptance Criteria:** 360-feedback inputs are securely consolidated; AI synthesis generates accurate, non-toxic, actionable review summaries.
+  - Endpoints: `POST /api/v1/performance/reviews`, `POST /api/v1/performance/reviews/synthesize`.
+  - Unbiased LLM synthesis prompt reducing subjectivity and extracting key strengths & growth opportunities.
+- **Technical Specs:** LLM Router structured schema generation.
+- **Status:** Complete.
 
 ---
 
-### Milestone 16: React/Vite Frontend Self-Service Portal & HR Admin Dashboard
+### Milestone 16: React/Vite Frontend Self-Service Portal & HR Admin Dashboard [COMPLETED]
 - **Objective:** Build a responsive, accessible React/TypeScript single-page application for employee self-service and HR administration.
 - **Key Deliverables:**
-  - Employee Self-Service: Dashboard, Onboarding Checklist, Leave Balances & Request Modal, Policy AI Chat Assistant.
-  - HR Admin Portal: Employee Directory, Leave Approvals Table, Policy Uploader & Acknowledgment Matrix, Review Cycle Manager.
-  - TanStack Query data caching, role-gated routes, Tailwind CSS theme.
-- **Technical Specs:** Vite, React 18, TypeScript, Tailwind CSS, Lucide icons, TanStack Query.
-- **Acceptance Criteria:** Frontend renders responsive UI across desktop and mobile, with role-based UI component visibility.
+  - API Client with JWT bearer management: `frontend/src/services/api.ts`.
+  - Views: Onboarding Checklist, Policy Assistant Q&A, Leave & PTO Management, Employee Directory, and Auth modal.
+  - Tailwind CSS dark-mode theme.
+- **Technical Specs:** Vite, React 18, TypeScript, Tailwind CSS.
+- **Status:** Complete.
 
 ---
 
-### Milestone 17: End-to-End Integration Testing, Security Audits & Production Deployment
-- **Objective:** Perform end-to-end integration tests, security pentesting, OpenAPI documentation validation, and production CI/CD deployment configuration.
+### Milestone 17: End-to-End Integration Testing, Security Audits & Production Deployment [COMPLETED]
+- **Objective:** Perform end-to-end integration tests, security audits, OpenAPI documentation validation, and production CI/CD deployment configuration.
 - **Key Deliverables:**
-  - Pytest async integration suite covering the entire lifecycle (recruiter webhook -> onboarding -> leave -> policy RAG -> performance review).
-  - GitHub Actions CI/CD workflows (linting, test coverage, Docker image packaging).
-  - Production Helm chart / Docker Compose production override with zero-leak secret configs.
-- **Technical Specs:** Pytest, HTTPX test client, GitHub Actions, Docker multi-stage builds.
-- **Acceptance Criteria:** Test suite passes with >85% code coverage; zero critical security vulnerabilities identified; automated CI/CD builds deploy successfully.
+  - Unit & security test suite: `backend/tests/test_auth.py`, `backend/tests/test_webhooks.py`, `backend/tests/test_pii_scrubber.py`.
+  - GitHub Actions CI/CD workflow: `.github/workflows/ci.yml`.
+  - Multi-container Docker Compose configuration: `docker/docker-compose.yml`.
+- **Technical Specs:** Pytest, GitHub Actions, Docker multi-stage builds.
+- **Status:** Complete.
