@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from backend.app.core.config import settings
+from backend.app.api.v1.api import api_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -35,5 +36,5 @@ async def health_check():
         "llm_provider": settings.PRIMARY_LLM_PROVIDER,
     }
 
-# API V1 router placeholder
-# app.include_router(api_router, prefix=settings.API_V1_STR)
+# Mount API V1 routes
+app.include_router(api_router, prefix=settings.API_V1_STR)

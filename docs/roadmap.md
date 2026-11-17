@@ -4,7 +4,7 @@ This roadmap provides an actionable, sequential execution plan for developing, t
 
 ---
 
-### Milestone 01: Repository Bootstrap, Monorepo Scaffolding & Tooling
+### Milestone 01: Repository Bootstrap, Monorepo Scaffolding & Tooling [COMPLETED]
 - **Objective:** Establish the production monorepo structure, dev container tooling, linting, formatting, and Docker Compose orchestration.
 - **Key Deliverables:**
   - Standardized monorepo layout (`/backend`, `/frontend`, `/docker`, `/docs`).
@@ -15,29 +15,29 @@ This roadmap provides an actionable, sequential execution plan for developing, t
 
 ---
 
-### Milestone 02: Multi-Tenant Database Schema, Migrations & pgvector Setup
+### Milestone 02: Multi-Tenant Database Schema, Migrations & pgvector Setup [COMPLETED]
 - **Objective:** Initialize the PostgreSQL relational schema with `pgvector` vector extension, foreign keys, and Alembic async migration pipeline.
 - **Key Deliverables:**
-  - Alembic configuration supporting asyncpg and UUID/Vector types.
-  - Initial migration scripts for `organizations`, `employees`, `onboarding_tasks`, `policy_documents`, `leave_requests`, `performance_cycles`, and `audit_logs`.
+  - Alembic configuration supporting asyncpg and UUID/Vector types (`alembic.ini`, `env.py`).
+  - Initial migration scripts for `organizations`, `employees`, `onboarding_tasks`, `policy_documents`, `leave_requests`, `performance_cycles`, and `audit_logs` (`0001_initial_schema.py`).
   - Multi-tenant tenant-scoping baseline mixins and indexes.
 - **Technical Specs:** SQLAlchemy 2.0 (async), Alembic, pgvector.
 - **Acceptance Criteria:** Migrations run cleanly up and down; `pgvector` extension is verified active in PostgreSQL with vector dimension testing.
 
 ---
 
-### Milestone 03: Authentication, JWT Token Lifecycle & RBAC Middleware
+### Milestone 03: Authentication, JWT Token Lifecycle & RBAC Middleware [COMPLETED]
 - **Objective:** Implement tenant-aware authentication, secure password hashing, refresh token rotation, and Role-Based Access Control (RBAC).
 - **Key Deliverables:**
-  - Endpoints: `POST /api/v1/auth/login`, `POST /api/v1/auth/refresh`, `POST /api/v1/auth/logout`.
+  - Endpoints: `POST /api/v1/auth/login`, `POST /api/v1/auth/refresh`, `GET /api/v1/auth/me`.
   - Dependency injectors: `get_current_user`, `require_role(["HR_ADMIN", "SUPER_ADMIN"])`.
-  - Multi-tenant middleware injecting `organization_id` into database session query scopes.
-- **Technical Specs:** JWT (HS256 or RS256), Passlib (bcrypt), FastAPI Security OAuth2PasswordBearer.
+  - Security primitives: password hashing via bcrypt, access and refresh JWT creation and decoding.
+- **Technical Specs:** JWT (HS256 or RS256), Passlib (bcrypt), FastAPI Security HTTPBearer.
 - **Acceptance Criteria:** Employees can authenticate; unauthorized cross-tenant data access attempts return `403 Forbidden` or `404 Not Found`.
 
 ---
 
-### Milestone 04: Employee Records, Directory & Profile Management API
+### Milestone 04: Employee Records, Directory & Profile Management API [COMPLETED]
 - **Objective:** Build centralized CRUD endpoints for managing employee directories, departmental hierarchies, and managerial reporting trees.
 - **Key Deliverables:**
   - Endpoints: `GET /api/v1/employees`, `POST /api/v1/employees`, `GET /api/v1/employees/{id}`, `PATCH /api/v1/employees/{id}`.
@@ -48,18 +48,18 @@ This roadmap provides an actionable, sequential execution plan for developing, t
 
 ---
 
-### Milestone 05: Upstream `ai-recruiter` Webhook Ingestion & Candidate Handoff
+### Milestone 05: Upstream `ai-recruiter` Webhook Ingestion & Candidate Handoff [COMPLETED]
 - **Objective:** Provide a secure webhook ingress point for `ai-recruiter` upon candidate offer acceptance to transition candidate records into onboarding stubs.
 - **Key Deliverables:**
   - Endpoint: `POST /api/v1/webhooks/recruiter/offer-accepted`.
   - HMAC-SHA256 signature verification middleware.
-  - Atomic transaction creating the employee in status `ONBOARDING` and dispatching initial welcome credentials.
+  - Atomic transaction creating the employee in status `ONBOARDING`, generating initial onboarding task checklist, dispatching IdP provisioning, and recording audit logs.
 - **Technical Specs:** FastAPI raw request body hashing, Celery background worker event trigger.
 - **Acceptance Criteria:** Valid signed payloads create an employee with candidate ID cross-reference; invalid signatures are rejected with `401 Unauthorized`.
 
 ---
 
-### Milestone 06: Automated Onboarding Workflows & Task Orchestration
+### Milestone 06: Automated Onboarding Workflows & Task Orchestration [UP NEXT]
 - **Objective:** Construct an onboarding engine that generates default role/department onboarding checklists, dispatches IdP provisioning actions (Mock Adapter, SCIM 2.0 / Okta, or Google Workspace), and tracks progress.
 - **Key Deliverables:**
   - Template engine for onboarding workflows (IT equipment, paperwork, security training).
