@@ -1,3 +1,39 @@
+# Release v1.5.0 — `ai-hr-platform`
+
+**Release Date:** November 18, 2026  
+**License:** Apache 2.0  
+**Status:** Production Ready  
+
+Version 1.5.0 introduces comprehensive enterprise security hardening: dependency vulnerability remediation (npm audit / esbuild & picomatch overrides), unprivileged non-root container isolation for backend and frontend, Nginx reverse proxy rate-limiting and buffer overflow defenses, HTTP security headers middleware (HSTS, CSP, X-Frame-Options DENY), JWT replay mitigation with unique `jti` and `nbf` claims, and prompt injection / adversarial jailbreak defense guardrails for LLM RAG queries.
+
+---
+
+## 🌟 What's New in v1.5.0
+
+### 1. Application & Container Hardening
+- **Unprivileged Non-Root Execution:**
+  - `backend/Dockerfile`: Created isolated `appuser` (UID 10001) with unprivileged system permissions; dropped root execution.
+  - `frontend/Dockerfile`: Migrated to `nginxinc/nginx-unprivileged:alpine` running non-root on port 8080.
+- **Frontend Dependency Vulnerability Remediation:**
+  - Pruned unused `react-router-dom` to eliminate CVE-2025-68470 open-redirect risk.
+  - Configured npm overrides for secure `esbuild` and `picomatch` releases.
+
+### 2. Network & Gateway Defense (Nginx & Middleware)
+- **Nginx Security Hardening (`docker/nginx/nginx.conf`):**
+  - Suppressed server version disclosure (`server_tokens off;`).
+  - Added buffer overflow protections (`client_body_buffer_size 128k`, `client_max_body_size 25M`, `large_client_header_buffers 4 8k`).
+  - Implemented dual rate-limiting zones: `auth_limit` (5 req/s with burst of 10 for credential endpoints) and `api_limit` (30 req/s with burst of 20 for general API routes).
+- **FastAPI HTTP Security Headers:**
+  - Injected strict HTTP headers: `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Strict-Transport-Security: max-age=31536000; includeSubDomains; preload`, and `Content-Security-Policy` with iframe denial.
+
+### 3. Authentication & Adversarial LLM Guardrails
+- **JWT Anti-Replay Protection (`backend/app/core/security.py`):**
+  - Added unique `jti` (JWT ID via 128-bit UUID) and `nbf` (not before timestamp) claims to all access and refresh tokens.
+- **Adversarial Prompt Injection Guardrail (`backend/app/services/policy_rag_service.py`):**
+  - Real-time heuristic detection filtering adversarial system prompt override attempts (`ignore previous instructions`, `you are now DAN`, etc.) before forwarding queries to the LLM.
+
+---
+
 # Release v1.4.0 — `ai-hr-platform`
 
 **Release Date:** November 18, 2026  

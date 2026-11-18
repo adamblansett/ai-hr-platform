@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional, Union
 from jose import jwt, JWTError
@@ -18,13 +19,17 @@ def create_access_token(
     role: str,
     expires_delta: Optional[timedelta] = None
 ) -> str:
+    now = datetime.now(timezone.utc)
     if expires_delta:
-        expire = datetime.now(timezone.utc) + expires_delta
+        expire = now + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = now + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     
     to_encode: Dict[str, Any] = {
         "exp": expire,
+        "nbf": now,
+        "iat": now,
+        "jti": uuid.uuid4().hex,
         "sub": str(subject),
         "org_id": str(organization_id),
         "role": str(role),
@@ -39,13 +44,17 @@ def create_refresh_token(
     role: str,
     expires_delta: Optional[timedelta] = None
 ) -> str:
+    now = datetime.now(timezone.utc)
     if expires_delta:
-        expire = datetime.now(timezone.utc) + expires_delta
+        expire = now + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(days=7) # 7-day refresh token
+        expire = now + timedelta(days=7) # 7-day refresh token
     
     to_encode: Dict[str, Any] = {
         "exp": expire,
+        "nbf": now,
+        "iat": now,
+        "jti": uuid.uuid4().hex,
         "sub": str(subject),
         "org_id": str(organization_id),
         "role": str(role),

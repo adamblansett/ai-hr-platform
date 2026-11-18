@@ -108,6 +108,27 @@ class PolicyRAGService:
         org_id: uuid.UUID,
         req: PolicyQuestionRequest
     ) -> PolicyAnswerResponse:
+        # Prompt Injection & Adversarial Jailbreak Defense
+        adversarial_patterns = [
+            "ignore previous instructions",
+            "disregard all prior directives",
+            "system prompt leak",
+            "you are now dan",
+            "pretend to be an unrestricted",
+            "bypass system rules",
+            "reveal internal prompt",
+            "exfiltrate database",
+        ]
+        lower_q = req.question.lower()
+        if any(pat in lower_q for pat in adversarial_patterns):
+            return PolicyAnswerResponse(
+                question=req.question,
+                answer="Security Warning: This query contains prohibited adversarial patterns. Corporate policy assistants only answer grounded policy inquiries.",
+                citations=[],
+                model_used="security-guardrail",
+                pii_redacted=False
+            )
+
         # 1. Embed query (768-dim)
         query_emb_res = await embedding_service.generate_embedding(req.question, preferred_dim=768)
         query_emb = query_emb_res["embedding"]

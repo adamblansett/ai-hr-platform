@@ -4,6 +4,7 @@ from pydantic import AnyHttpUrl, field_validator
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "ai-hr-platform"
+    ENVIRONMENT: str = "development"  # development | staging | production
     API_V1_STR: str = "/api/v1"
     SECRET_KEY: str = "replace-this-in-production-with-a-secure-random-32-byte-hex-string"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 # 24 hours
@@ -11,6 +12,7 @@ class Settings(BaseSettings):
 
     # Multi-tenant and CORS
     ALLOWED_ORIGINS: List[str] = ["http://localhost:5173", "http://localhost:3000"]
+    ENABLE_SECURITY_HEADERS: bool = True
 
     # Database
     POSTGRES_SERVER: str = "localhost"
