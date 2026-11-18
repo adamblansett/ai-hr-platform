@@ -1,0 +1,301 @@
+{
+  "info": {
+    "_postman_id": "771e3b52-4412-4c28-9842-a89c8941f712",
+    "name": "ai-hr-platform API Collection",
+    "description": "Comprehensive Postman collection for testing all endpoints of the ai-hr-platform microservice including Auth, Onboarding, Policy RAG, Leave Management, Performance 360 AI Synthesis, and Inbound SCIM 2.0.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login - HR Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.access_token) {",
+                  "    pm.collectionVariables.set('authToken', jsonData.access_token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@acme.corp\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login - Employee",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"engineer.alex@acme.corp\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Employee Directory",
+      "item": [
+        {
+          "name": "List Directory Employees",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/employees?page=1&size=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["employees"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Organizational Chart Tree",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/employees/org-chart",
+              "host": ["{{baseUrl}}"],
+              "path": ["employees", "org-chart"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Upstream Webhooks (ai-recruiter)",
+      "item": [
+        {
+          "name": "Offer Accepted Candidate Handoff",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Recruiter-Signature", "value": "sha256=COMPUTED_HMAC_DIGEST" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event_id\": \"evt_demo_101\",\n  \"event_type\": \"candidate.offer_accepted\",\n  \"timestamp\": \"2026-11-18T10:00:00Z\",\n  \"organization_id\": \"11111111-1111-1111-1111-111111111111\",\n  \"candidate\": {\n    \"recruiter_candidate_id\": \"cand_9941\",\n    \"first_name\": \"Marcus\",\n    \"last_name\": \"Vance\",\n    \"email\": \"marcus.vance@example.com\",\n    \"job_title\": \"Principal AI Systems Architect\",\n    \"department\": \"Platform Engineering\",\n    \"hire_date\": \"2026-12-01\",\n    \"employment_type\": \"FULL_TIME\",\n    \"manager_email\": \"manager.sarah@acme.corp\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/webhooks/recruiter/offer-accepted",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhooks", "recruiter", "offer-accepted"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Policy Enforcement & RAG",
+      "item": [
+        {
+          "name": "Ask Policy RAG Assistant",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"What is the maximum number of unused PTO days that can be rolled over?\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/policies/chat",
+              "host": ["{{baseUrl}}"],
+              "path": ["policies", "chat"]
+            }
+          }
+        },
+        {
+          "name": "List Policies",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/policies",
+              "host": ["{{baseUrl}}"],
+              "path": ["policies"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Leave & Attendance",
+      "item": [
+        {
+          "name": "Get My Leave Balances",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/leave/balances/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["leave", "balances", "me"]
+            }
+          }
+        },
+        {
+          "name": "Submit Leave Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"policy_id\": \"POLICY_UUID_HERE\",\n  \"start_date\": \"2026-12-20\",\n  \"end_date\": \"2026-12-24\",\n  \"reason\": \"Holiday family travel\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/leave/requests",
+              "host": ["{{baseUrl}}"],
+              "path": ["leave", "requests"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inbound SCIM 2.0 Server",
+      "item": [
+        {
+          "name": "SCIM Service Provider Config",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/scim/v2/ServiceProviderConfig",
+              "host": ["{{baseUrl}}"],
+              "path": ["scim", "v2", "ServiceProviderConfig"]
+            }
+          }
+        },
+        {
+          "name": "SCIM Query Users",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/scim/v2/Users?count=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["scim", "v2", "Users"],
+              "query": [{ "key": "count", "value": "20" }]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics & Telemetry",
+      "item": [
+        {
+          "name": "Get HR Overview Metrics",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/analytics/overview",
+              "host": ["{{baseUrl}}"],
+              "path": ["analytics", "overview"]
+            }
+          }
+        },
+        {
+          "name": "Prometheus Metrics",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8000/metrics",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["metrics"]
+            }
+          }
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8000/health",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
