@@ -1,0 +1,12 @@
+{
+  "name": "@ai-hr/sdk",
+  "version": "1.0.0",
+  "description": "Official TypeScript Client SDK for ai-hr-platform",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": ["ai-hr", "sdk", "hr-platform", "rag", "typescript"],
+  "license": "Apache-2.0"
+}

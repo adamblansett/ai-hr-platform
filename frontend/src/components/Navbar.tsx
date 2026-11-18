@@ -18,6 +18,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, user, o
     { id: 'compensation', label: 'Compensation & Equity' },
     { id: 'localization', label: 'Global & Holidays' },
     { id: 'compliance', label: 'Compliance & Audit' },
+    { id: 'integrations', label: 'Integrations & Webhooks' },
   ];
 
   return (

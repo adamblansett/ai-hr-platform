@@ -184,3 +184,31 @@ export interface SOC2Evidence {
     [key: string]: any;
   }>;
 }
+
+export interface WebhookSubscription {
+  id: string;
+  organization_id: string;
+  target_url: string;
+  event_types: string[];
+  is_active: boolean;
+  description?: string;
+  created_at: string;
+}
+
+export interface WebhookDeliveryLog {
+  id: string;
+  subscription_id: string;
+  event_type: string;
+  status_code?: number;
+  attempt_count: number;
+  delivered_at: string;
+  error_message?: string;
+}
+
+export interface WebhookTestPingResult {
+  status: string;
+  target_url: string;
+  signature_header: string;
+  test_event: string;
+  timestamp: string;
+}

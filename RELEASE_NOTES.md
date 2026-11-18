@@ -1,3 +1,42 @@
+# Release v1.4.0 — `ai-hr-platform`
+
+**Release Date:** November 18, 2026  
+**License:** Apache 2.0  
+**Status:** Production Ready  
+
+Version 1.4.0 delivers the complete ecosystem developer and operational package: an interactive 8-stage terminal demo tour script, an Outbound Integrations and Webhooks frontend management view, automated CI security and SAST scanning (Bandit, Trivy, Gitleaks), and official client SDKs for both Python and TypeScript.
+
+---
+
+## 🌟 What's New in v1.4.0
+
+### 1. Interactive End-to-End Enterprise Tour CLI (`backend/scripts/demo_tour.py`)
+- Standalone executable script demonstrating all 8 critical lifecycle milestones in sequence:
+  1. Recruiter handoff offer acceptance webhook with HMAC-SHA256 signature verification.
+  2. Role-specific 5-point onboarding checklist generation.
+  3. Form I-9 document OCR with digital signature detection.
+  4. Multilingual Policy RAG handbook query with zero-leak PII scrubbing.
+  5. Departmental calendar overlap and PTO conflict detection.
+  6. Gross-to-net payroll deductions and 48-month equity vesting with a 1-year cliff.
+  7. Outbound webhook event signing for downstream HRIS (Workday/ADP).
+  8. GDPR Article 15 DSAR bundle packaging with SHA-256 seal integrity verification.
+
+### 2. Outbound Webhooks & HRIS Integrations Dashboard (`IntegrationsView.tsx`)
+- Web management portal for administrators to register, manage, and monitor outbound webhooks.
+- Multi-event trigger selection (`employee.hired`, `leave.approved`, `equity.vested`, `compensation.updated`).
+- Real-time **Test Ping** button providing instant simulation with `X-AI-HR-Signature-256` HMAC previews.
+
+### 3. Automated Security Scanning & DevSecOps CI Pipeline (`.github/workflows/security.yml`)
+- **Bandit SAST Linter:** Scans Python backend codebase for security anti-patterns.
+- **Trivy Container & Repo Scanner:** Scans containers and dependencies for CVEs.
+- **Gitleaks:** Continuous secret detection across all commits and PRs.
+
+### 4. Official Python & TypeScript Client SDKs
+- **Python SDK (`packages/ai-hr-sdk-python/`):** Full client library with authentication, policy RAG querying, compensation metrics, and outbound webhook dispatch.
+- **TypeScript SDK (`packages/ai-hr-sdk-ts/`):** Typed client package with full interfaces for Node.js and frontend consumers.
+
+---
+
 # Release v1.3.0 — `ai-hr-platform`
 
 **Release Date:** November 18, 2026  

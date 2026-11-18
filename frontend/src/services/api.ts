@@ -11,6 +11,9 @@ import {
   LanguageDetectionResult,
   FlightRiskRecord,
   SOC2Evidence,
+  WebhookSubscription,
+  WebhookDeliveryLog,
+  WebhookTestPingResult,
 } from '../types';
 
 const API_BASE = '/api/v1';
@@ -174,6 +177,34 @@ class ApiClient {
 
   async getSoc2Evidence(): Promise<SOC2Evidence> {
     return this.request<SOC2Evidence>('/compliance/soc2/evidence');
+  }
+
+  // Outbound Webhooks (Workday / ADP / Gusto)
+  async getOutboundSubscriptions(): Promise<WebhookSubscription[]> {
+    return this.request<WebhookSubscription[]>('/webhooks/outbound/subscriptions');
+  }
+
+  async createOutboundSubscription(data: { target_url: string; event_types: string[]; description?: string }): Promise<WebhookSubscription> {
+    return this.request<WebhookSubscription>('/webhooks/outbound/subscriptions', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteOutboundSubscription(id: string): Promise<void> {
+    return this.request(`/webhooks/outbound/subscriptions/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async testPingOutboundSubscription(id: string): Promise<WebhookTestPingResult> {
+    return this.request<WebhookTestPingResult>(`/webhooks/outbound/subscriptions/${id}/test-ping`, {
+      method: 'POST',
+    });
+  }
+
+  async getOutboundDeliveryLogs(subId: string): Promise<WebhookDeliveryLog[]> {
+    return this.request<WebhookDeliveryLog[]>(`/webhooks/outbound/subscriptions/${subId}/logs`);
   }
 }
 
