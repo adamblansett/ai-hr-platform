@@ -18,6 +18,10 @@ from backend.app.models.succession import (
     FlightRiskAssessment,
     InternalRequisition,
 )
+from backend.app.models.outbound_webhook import (
+    WebhookSubscription,
+    WebhookDeliveryLog,
+)
 
 __all__ = [
     "Base",
@@ -53,4 +57,6 @@ __all__ = [
     "SkillCompetency",
     "FlightRiskAssessment",
     "InternalRequisition",
+    "WebhookSubscription",
+    "WebhookDeliveryLog",
 ]

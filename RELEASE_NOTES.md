@@ -1,3 +1,42 @@
+# Release v1.3.0 — `ai-hr-platform`
+
+**Release Date:** November 18, 2026  
+**License:** Apache 2.0  
+**Status:** Production Ready  
+
+Version 1.3.0 delivers multi-cloud Infrastructure as Code (Terraform for AWS & GCP), automated test suites covering compensation, flight risk, and compliance verification, Playwright E2E browser flows for the Enterprise Suite, and an event-driven outbound webhook subscription engine for downstream HRIS/ERP integrations (Workday, ADP, Gusto).
+
+---
+
+## 🌟 What's New in v1.3.0
+
+### 1. Multi-Cloud Infrastructure as Code (Terraform / OpenTofu)
+- **AWS Production Architecture (`deploy/terraform/aws/`):**
+  - **VPC & Subnets:** Isolated multi-AZ private subnets for stateful workloads.
+  - **RDS Aurora PostgreSQL 16:** Cluster with native `pgvector` shared library preloading and automated multi-AZ failover.
+  - **ElastiCache Redis 7:** Dedicated Redis instance for rate limiting and Celery worker queuing.
+  - **S3 Document Vault:** Server-side encrypted storage with AWS KMS customer-managed key rotation.
+- **Google Cloud Platform Architecture (`deploy/terraform/gcp/`):**
+  - **Cloud SQL PostgreSQL 16:** Managed instance with `cloudsql.enable_pgvector=on`.
+  - **GKE Autopilot:** Production Kubernetes cluster auto-scaling with workload identity.
+  - **Cloud Storage Vault:** KMS-encrypted bucket with uniform bucket-level access control.
+
+### 2. Event-Driven Outbound Webhook Subscriptions (`/api/v1/webhooks/outbound`)
+- **Third-Party Integration Hub:**
+  - Enables downstream payroll providers (ADP, Gusto, Workday) and IT systems to subscribe to real-time events (`employee.hired`, `leave.approved`, `equity.vested`, `compensation.updated`).
+  - Cryptographic HMAC-SHA256 signature generation (`X-AI-HR-Signature-256`) per subscription secret.
+  - Delivery logs and simulated test-ping endpoint (`POST /api/v1/webhooks/outbound/subscriptions/{id}/test-ping`).
+
+### 3. Comprehensive Automated Verification Suite
+- **Unit & Integration Tests (`backend/tests/`):**
+  - `test_compensation.py`: Validates 1-year cliff equity vesting and federal/FICA/medicare tax calculations.
+  - `test_succession.py`: Validates candidate skill overlap percentages and flight-risk categorization thresholds.
+  - `test_compliance.py`: Validates SHA-256 integrity seal tampering detection and GDPR Article 17 PII redaction.
+- **Playwright E2E Test Suite (`frontend/tests/e2e/enterprise.spec.ts`):**
+  - Automated browser tests verifying end-to-end user navigation through Compensation & Equity, Global Statutory Holidays, and SOC 2 / GDPR Compliance dashboards.
+
+---
+
 # Release v1.2.0 — `ai-hr-platform`
 
 **Release Date:** November 18, 2026  
