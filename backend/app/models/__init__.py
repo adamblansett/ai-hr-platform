@@ -6,6 +6,13 @@ from backend.app.models.policy import PolicyDocument, PolicyAcknowledgment
 from backend.app.models.leave import LeavePolicy, LeaveBalance, LeaveRequest, LeaveType, LeaveStatus
 from backend.app.models.performance import PerformanceCycle, GoalOKR, ReviewFeedback, CycleStatus, GoalStatus, ReviewRelationship
 from backend.app.models.audit import AuditLog
+from backend.app.models.compensation import (
+    CompensationPackage,
+    EquityGrant,
+    PaystubRecord,
+    PayFrequency,
+    EquityGrantType,
+)
 
 __all__ = [
     "Base",
@@ -33,4 +40,9 @@ __all__ = [
     "GoalStatus",
     "ReviewRelationship",
     "AuditLog",
+    "CompensationPackage",
+    "EquityGrant",
+    "PaystubRecord",
+    "PayFrequency",
+    "EquityGrantType",
 ]

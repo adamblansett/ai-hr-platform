@@ -1,3 +1,41 @@
+# Release v1.1.0 — `ai-hr-platform`
+
+**Release Date:** November 18, 2026  
+**License:** Apache 2.0  
+**Status:** Production Ready  
+
+Version 1.1.0 introduces full-cycle payroll calculation, equity compensation with vesting schedule simulation, multilingual RAG localized across 7 languages, global statutory holiday calendars (US, UK, DE, JP), and an end-to-end multi-service ecosystem orchestrator connecting `ai-recruiter` and `ai-hr-platform`.
+
+---
+
+## 🌟 What's New in v1.1.0
+
+### 1. Payroll & Equity Compensation Engine
+- **Salary & Compensation Packages (`/api/v1/compensation`):**
+  - Manages base salary, payment frequency (`MONTHLY`, `BIWEEKLY`, `SEMIMONTHLY`), target bonus %, and currency code.
+  - Automated payroll calculation with tax withholding estimations: Federal Income Tax (22%), Social Security (6.2%), Medicare (1.45%), and State Tax (5%).
+  - Detailed paystub generation with gross-to-net breakdown and unique paystub tracking numbers.
+- **Equity Grants & Cliff/Vesting Schedules:**
+  - Support for ISO, NSO, and RSU equity grant types.
+  - Built-in vesting schedule simulator with standard 1-year cliff and 48-month linear vesting progression.
+  - Employee self-service `/api/v1/compensation/me` reporting vested vs. unvested shares, current estimated valuation, and next vesting date.
+
+### 2. Multilingual Policy RAG & Statutory Holiday Localization
+- **Multilingual Knowledge Engine (`/api/v1/localization`):**
+  - Zero-latency heuristic language detector supporting English (`en`), Spanish (`es`), French (`fr`), German (`de`), Japanese (`ja`), Portuguese (`pt`), and Chinese (`zh`).
+  - Native language prompt augmentation for RAG responses, allowing international employees to query company handbooks in their mother tongue while citing exact clause sources.
+- **Global Statutory Public Holiday Calendar:**
+  - Pre-seeded statutory holiday calendars across four major enterprise jurisdictions: United States (`US`), United Kingdom (`UK`), Germany (`DE`), and Japan (`JP`).
+  - Seamless integration with the leave management engine to prevent PTO deductions on recognized legal holidays.
+
+### 3. Ecosystem Orchestration (`docker/ecosystem-compose.yml`)
+- **Multi-Service Interconnect:**
+  - Dedicated Docker Compose definition bridging `ai-recruiter` (upstream hiring workflow) and `ai-hr-platform` (onboarding and employee lifecycle) across a unified network bridge (`recruiter_hr_bridge`).
+- **Automated End-to-End Orchestrator (`backend/scripts/ecosystem_e2e_runner.py`):**
+  - Automated runner executing the full hiring-to-onboarding lifecycle: candidate offer acceptance, cryptographic HMAC webhook delivery, employee profile provisioning, task checklist generation, and welcome package dispatch.
+
+---
+
 # Release v1.0.0 — `ai-hr-platform`
 
 **Release Date:** November 18, 2026  

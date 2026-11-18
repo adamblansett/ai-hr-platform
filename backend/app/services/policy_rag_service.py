@@ -17,6 +17,7 @@ from backend.app.schemas.policy import (
 )
 from backend.app.services.embedding_service import embedding_service
 from backend.app.services.llm_router import llm_router
+from backend.app.services.localization_service import localization_service
 
 class PolicyRAGService:
     @staticmethod
@@ -163,6 +164,10 @@ class PolicyRAGService:
             "3. If the provided excerpts do not contain the answer, politely state: 'I could not find information regarding this in company policies. Please contact HR for clarification.'\n"
             "4. Maintain a warm, clear, professional tone."
         )
+
+        # Detect language and localize prompt
+        lang = localization_service.detect_language(req.question)
+        system_prompt = localization_service.augment_rag_prompt_for_language(system_prompt, lang)
 
         user_prompt = f"Policy Excerpts:\n{context_text}\n\nEmployee Question:\n{req.question}"
 

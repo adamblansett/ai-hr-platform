@@ -10,6 +10,8 @@ from backend.app.api.v1.endpoints.performance import router as performance_route
 from backend.app.api.v1.endpoints.integrations import router as integrations_router
 from backend.app.api.v1.endpoints.scim_server import router as scim_router
 from backend.app.api.v1.endpoints.analytics import router as analytics_router
+from backend.app.api.v1.endpoints.compensation import router as compensation_router
+from backend.app.api.v1.endpoints.localization import router as localization_router
 
 api_router = APIRouter()
 
@@ -24,3 +26,5 @@ api_router.include_router(webhooks_router, prefix="/webhooks", tags=["Upstream W
 api_router.include_router(integrations_router, prefix="/integrations", tags=["Chatbot & Webhook Integrations (Slack/Teams)"])
 api_router.include_router(scim_router, prefix="/scim/v2", tags=["SCIM 2.0 Inbound Protocol"])
 api_router.include_router(analytics_router, prefix="/analytics", tags=["HR Analytics & Calibration"])
+api_router.include_router(compensation_router, prefix="/compensation", tags=["Compensation, Equity & Payroll"])
+api_router.include_router(localization_router, prefix="/localization", tags=["Multilingual & Regional Holidays"])
