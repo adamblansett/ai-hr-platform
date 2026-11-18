@@ -1,4 +1,17 @@
-import { Employee, OnboardingProgress, PolicyDocument, PolicyAnswer, LeaveBalance, LeaveRequest, GoalOKR } from '../types';
+import {
+  Employee,
+  OnboardingProgress,
+  PolicyDocument,
+  PolicyAnswer,
+  LeaveBalance,
+  LeaveRequest,
+  GoalOKR,
+  CompensationSummary,
+  HolidayItem,
+  LanguageDetectionResult,
+  FlightRiskRecord,
+  SOC2Evidence,
+} from '../types';
 
 const API_BASE = '/api/v1';
 
@@ -111,6 +124,56 @@ class ApiClient {
   // Performance & Goals
   async getMyGoals(): Promise<GoalOKR[]> {
     return this.request<GoalOKR[]>('/performance/goals/me');
+  }
+
+  // Compensation & Equity
+  async getMyCompensation(): Promise<CompensationSummary> {
+    return this.request<CompensationSummary>('/compensation/me');
+  }
+
+  async runPayroll(periodStart: string, periodEnd: string) {
+    return this.request('/compensation/paystubs/run-payroll', {
+      method: 'POST',
+      body: JSON.stringify({ pay_period_start: periodStart, pay_period_end: periodEnd }),
+    });
+  }
+
+  // Localization & Holidays
+  async getHolidays(country = 'US', year = 2026): Promise<HolidayItem[]> {
+    return this.request<HolidayItem[]>(`/localization/holidays?country=${country}&year=${year}`);
+  }
+
+  async detectLanguage(text: string): Promise<LanguageDetectionResult> {
+    return this.request<LanguageDetectionResult>('/localization/detect-language', {
+      method: 'POST',
+      body: JSON.stringify({ text }),
+    });
+  }
+
+  // Succession & Flight Risk
+  async getFlightRisks(): Promise<FlightRiskRecord[]> {
+    return this.request<FlightRiskRecord[]>('/succession/flight-risk');
+  }
+
+  async evaluateFlightRisk(employeeId: string): Promise<FlightRiskRecord> {
+    return this.request<FlightRiskRecord>(`/succession/flight-risk/evaluate/${employeeId}`, {
+      method: 'POST',
+    });
+  }
+
+  // Compliance & Governance
+  async getDSARReport(employeeId: string): Promise<any> {
+    return this.request(`/compliance/dsar/${employeeId}`);
+  }
+
+  async executeRightToBeForgotten(employeeId: string): Promise<any> {
+    return this.request(`/compliance/right-to-be-forgotten/${employeeId}`, {
+      method: 'POST',
+    });
+  }
+
+  async getSoc2Evidence(): Promise<SOC2Evidence> {
+    return this.request<SOC2Evidence>('/compliance/soc2/evidence');
   }
 }
 

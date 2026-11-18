@@ -99,3 +99,88 @@ export interface GoalOKR {
   progress_percentage: number;
   status: 'NOT_STARTED' | 'IN_PROGRESS' | 'ACHIEVED' | 'EXCEEDED' | 'MISSED';
 }
+
+export interface EquityGrant {
+  id: string;
+  grant_type: 'ISO' | 'NSO' | 'RSU';
+  total_shares: number;
+  vested_shares: number;
+  unvested_shares: number;
+  strike_price: number;
+  grant_date: string;
+  vesting_start_date: string;
+  cliff_date: string;
+  cliff_months: number;
+  total_vesting_months: number;
+  estimated_current_value: number;
+  next_vesting_date?: string;
+}
+
+export interface CompensationPackage {
+  id: string;
+  employee_id: string;
+  base_salary: number;
+  currency: string;
+  payment_frequency: 'MONTHLY' | 'BIWEEKLY' | 'SEMIMONTHLY';
+  target_bonus_percentage: number;
+  effective_date: string;
+}
+
+export interface PaystubRecord {
+  id: string;
+  paystub_number: string;
+  pay_period_start: string;
+  pay_period_end: string;
+  payment_date: string;
+  gross_pay: number;
+  federal_tax: number;
+  social_security: number;
+  medicare: number;
+  state_tax: number;
+  other_deductions: number;
+  net_pay: number;
+}
+
+export interface CompensationSummary {
+  package?: CompensationPackage;
+  equity_grants: EquityGrant[];
+  recent_paystubs: PaystubRecord[];
+  total_equity_shares: number;
+  total_vested_shares: number;
+  total_unvested_shares: number;
+}
+
+export interface HolidayItem {
+  name: string;
+  date: string;
+  country: string;
+  jurisdiction: string;
+}
+
+export interface LanguageDetectionResult {
+  detected_language: string;
+  language_name: string;
+  supported: boolean;
+}
+
+export interface FlightRiskRecord {
+  id: string;
+  employee_id: string;
+  risk_score: number;
+  risk_level: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  contributing_factors: string[];
+  recommended_interventions: string[];
+  evaluated_at: string;
+}
+
+export interface SOC2Evidence {
+  report_name: string;
+  organization_id: string;
+  generated_at: string;
+  overall_status: string;
+  controls: Record<string, {
+    status: string;
+    description: string;
+    [key: string]: any;
+  }>;
+}

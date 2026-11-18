@@ -12,6 +12,8 @@ from backend.app.api.v1.endpoints.scim_server import router as scim_router
 from backend.app.api.v1.endpoints.analytics import router as analytics_router
 from backend.app.api.v1.endpoints.compensation import router as compensation_router
 from backend.app.api.v1.endpoints.localization import router as localization_router
+from backend.app.api.v1.endpoints.succession import router as succession_router
+from backend.app.api.v1.endpoints.compliance import router as compliance_router
 
 api_router = APIRouter()
 
@@ -28,3 +30,5 @@ api_router.include_router(scim_router, prefix="/scim/v2", tags=["SCIM 2.0 Inboun
 api_router.include_router(analytics_router, prefix="/analytics", tags=["HR Analytics & Calibration"])
 api_router.include_router(compensation_router, prefix="/compensation", tags=["Compensation, Equity & Payroll"])
 api_router.include_router(localization_router, prefix="/localization", tags=["Multilingual & Regional Holidays"])
+api_router.include_router(succession_router, prefix="/succession", tags=["Succession & Career Mobility"])
+api_router.include_router(compliance_router, prefix="/compliance", tags=["Compliance & Data Governance (GDPR / SOC 2)"])

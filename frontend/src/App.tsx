@@ -4,6 +4,9 @@ import { OnboardingView } from './components/OnboardingView';
 import { DirectoryView } from './components/DirectoryView';
 import { PolicyAssistantView } from './components/PolicyAssistantView';
 import { LeaveManagementView } from './components/LeaveManagementView';
+import { CompensationView } from './components/CompensationView';
+import { LocalizationView } from './components/LocalizationView';
+import { ComplianceView } from './components/ComplianceView';
 import { Employee } from './types';
 import { api } from './services/api';
 
@@ -120,6 +123,9 @@ export const App: React.FC = () => {
         {activeTab === 'directory' && <DirectoryView />}
         {activeTab === 'policies' && <PolicyAssistantView />}
         {activeTab === 'leave' && <LeaveManagementView />}
+        {activeTab === 'compensation' && <CompensationView />}
+        {activeTab === 'localization' && <LocalizationView />}
+        {activeTab === 'compliance' && <ComplianceView />}
         {activeTab === 'performance' && (
           <div className="bg-slate-800 border border-slate-700 rounded-xl p-8 text-center space-y-3">
             <h3 className="text-lg font-bold text-white">Continuous Performance & 360 Reviews</h3>

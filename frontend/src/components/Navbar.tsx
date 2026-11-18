@@ -15,7 +15,9 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, user, o
     { id: 'directory', label: 'Directory' },
     { id: 'policies', label: 'Policy AI Assistant' },
     { id: 'leave', label: 'Leave & PTO' },
-    { id: 'performance', label: 'Performance & OKRs' },
+    { id: 'compensation', label: 'Compensation & Equity' },
+    { id: 'localization', label: 'Global & Holidays' },
+    { id: 'compliance', label: 'Compliance & Audit' },
   ];
 
   return (

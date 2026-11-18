@@ -1,3 +1,47 @@
+# Release v1.2.0 — `ai-hr-platform`
+
+**Release Date:** November 18, 2026  
+**License:** Apache 2.0  
+**Status:** Production Ready  
+
+Version 1.2.0 completes the comprehensive Enterprise Suite: frontend interactive views for compensation/equity, international holidays, and multilingual policy RAG; AI-driven succession planning with flight-risk prediction and requisition skill matching; and an enterprise compliance vault featuring GDPR/CCPA Data Subject Access Request (DSAR) packaging, Article 17 Right to Erasure, and real-time SOC 2 Type II audit readiness reporting.
+
+---
+
+## 🌟 What's New in v1.2.0
+
+### 1. Enterprise UI Expansion (React 18 / TypeScript / Tailwind CSS)
+- **Compensation & Equity Dashboard (`CompensationView.tsx`):**
+  - Self-service annual base salary, target bonus, and total compensation breakdown.
+  - Interactive equity grant viewer with 48-month linear vesting progression and 1-year cliff threshold indicators.
+  - Historical paystub table with federal, FICA, medicare, and state tax deductions.
+- **Global & Holiday Calendar View (`LocalizationView.tsx`):**
+  - Regional statutory holiday calendar toggle for United States, United Kingdom, Germany, and Japan.
+  - Interactive multilingual policy assistant tester supporting Spanish, French, German, and Japanese.
+- **Compliance & Governance Dashboard (`ComplianceView.tsx`):**
+  - Live SOC 2 Type II control monitor (CC6.1 Access Control, CC6.6 Data Protection, CC7.2 Audit Integrity, CC2.1 Policy Governance).
+  - AI Flight-Risk calibration view for people managers and HR executives.
+  - One-click GDPR Data Subject Access Request (DSAR) generator with SHA-256 seal verification.
+
+### 2. AI-Driven Succession Planning & Career Mobility
+- **Skill Competency Taxonomy (`/api/v1/succession/skills`):**
+  - Structured employee skill tracking across technical, leadership, domain, and compliance categories.
+- **Predictive Retention & Flight-Risk Engine (`/api/v1/succession/flight-risk`):**
+  - Calculates retention flight risk (0.0 to 1.0) and assigns risk tiers (`LOW`, `MEDIUM`, `HIGH`, `CRITICAL`) using role tenure, market compensation ratio, and performance reviews.
+  - Generates recommended interventions (e.g. spot compensation reviews, promotion evaluations, lateral stretch projects).
+- **Internal Mobility Candidate Matcher (`/api/v1/succession/requisitions/{id}/match`):**
+  - Matches active employees against open requisitions by computing skill overlap and identifying skill gaps for targeted upskilling.
+
+### 3. Enterprise Compliance & Data Governance Vault
+- **GDPR / CCPA DSAR Bundle Exporter (`GET /api/v1/compliance/dsar/{id}`):**
+  - Compiles full subject dossier (profile, onboarding tasks, document OCR logs, leave requests, compensation, paystubs, policy digital signatures) into a structured JSON export protected with a cryptographic SHA-256 integrity seal.
+- **GDPR Article 17 Right-to-be-Forgotten Engine (`POST /api/v1/compliance/right-to-be-forgotten/{id}`):**
+  - Safely anonymizes personal identity records (name, email, phone) to pseudonymous tokens while preserving tamper-evident audit history.
+- **SOC 2 Type II Evidence Summary (`GET /api/v1/compliance/soc2/evidence`):**
+  - Aggregates automated audit evidence covering RBAC identities, Zero-Leak PII scrubbing, immutable audit trails, and cryptographic policy signatures.
+
+---
+
 # Release v1.1.0 — `ai-hr-platform`
 
 **Release Date:** November 18, 2026  

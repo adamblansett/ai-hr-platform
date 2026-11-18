@@ -13,6 +13,11 @@ from backend.app.models.compensation import (
     PayFrequency,
     EquityGrantType,
 )
+from backend.app.models.succession import (
+    SkillCompetency,
+    FlightRiskAssessment,
+    InternalRequisition,
+)
 
 __all__ = [
     "Base",
@@ -45,4 +50,7 @@ __all__ = [
     "PaystubRecord",
     "PayFrequency",
     "EquityGrantType",
+    "SkillCompetency",
+    "FlightRiskAssessment",
+    "InternalRequisition",
 ]
