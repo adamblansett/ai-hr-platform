@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
-import { LeaveBalance, LeaveRequest, PolicyDocument } from '../types';
+import { LeaveBalance, LeaveRequest } from '../types';
 
 export const LeaveManagementView: React.FC = () => {
   const [balances, setBalances] = useState<LeaveBalance[]>([]);
   const [requests, setRequests] = useState<LeaveRequest[]>([]);
-  const [policies, setPolicies] = useState<any[]>([]);
   const [showModal, setShowModal] = useState(false);
 
   // Form

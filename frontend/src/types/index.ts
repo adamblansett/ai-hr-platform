@@ -71,6 +71,7 @@ export interface PolicyAnswer {
 
 export interface LeaveBalance {
   id: string;
+  policy_id: string;
   policy_name: string;
   leave_type: string;
   year: number;
