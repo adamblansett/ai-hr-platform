@@ -1,0 +1,16 @@
+apiVersion: v2
+name: ai-hr-platform
+description: Cloud-Native Microservice for Autonomous HR Operations, Employee Lifecycle, Policy RAG, and Performance
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - hr
+  - ai
+  - fastapi
+  - pgvector
+  - rag
+  - celery
+maintainers:
+  - name: Platform Engineering Team
+    email: platform@example.com

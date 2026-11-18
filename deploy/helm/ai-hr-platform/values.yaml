@@ -1,0 +1,94 @@
+global:
+  environment: production
+  domain: hr.example.com
+
+backend:
+  replicaCount: 3
+  image:
+    repository: ghcr.io/adamblansett/ai-hr-platform-backend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8000
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+    requests:
+      cpu: 250m
+      memory: 512Mi
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 75
+
+worker:
+  replicaCount: 2
+  image:
+    repository: ghcr.io/adamblansett/ai-hr-platform-backend
+    tag: latest
+    pullPolicy: IfNotPresent
+  concurrency: 4
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+
+frontend:
+  replicaCount: 2
+  image:
+    repository: ghcr.io/adamblansett/ai-hr-platform-frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
+  hosts:
+    - host: hr.example.com
+      paths:
+        - path: /api
+          pathType: Prefix
+          service: backend
+        - path: /
+          pathType: Prefix
+          service: frontend
+  tls:
+    - secretName: ai-hr-platform-tls
+      hosts:
+        - hr.example.com
+
+config:
+  postgresServer: "postgres-postgresql.database.svc.cluster.local"
+  postgresDb: "ai_hr_db"
+  postgresUser: "postgres"
+  redisUrl: "redis://redis-master.database.svc.cluster.local:6379/0"
+  ollamaBaseUrl: "http://ollama-service.ai.svc.cluster.local:11434"
+  primaryLlmProvider: "ollama"
+  ollamaModel: "llama3.1:8b"
+  embeddingModel: "nomic-embed-text"
+
+secrets:
+  secretKey: "CHANGE-ME-IN-PRODUCTION-64-CHARACTER-SECRET"
+  postgresPassword: "SECURE-POSTGRES-PASSWORD"
+  recruiterWebhookSecret: "SHARED-RECRUITER-HMAC-SECRET"
+  openaiApiKey: ""

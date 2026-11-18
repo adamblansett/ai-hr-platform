@@ -14,6 +14,7 @@ from backend.app.schemas.onboarding import (
     DocumentUploadResponse,
 )
 from backend.app.services.onboarding_service import onboarding_service
+from backend.app.services.document_ocr_service import document_ocr_service, OCRVerificationResult
 
 router = APIRouter()
 
@@ -117,3 +118,31 @@ async def upload_task_document(
         uploaded_at=datetime.now(timezone.utc),
         status="UPLOADED_PENDING_HR_VERIFICATION"
     )
+
+@router.post("/tasks/{task_id}/verify-document", response_model=OCRVerificationResult, summary="Automated OCR compliance verification for onboarding task")
+async def verify_task_document(
+    task_id: uuid.UUID,
+    file: UploadFile = File(...),
+    current_user: Employee = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    file_bytes = await file.read()
+    emp_full_name = f"{current_user.first_name} {current_user.last_name}"
+    
+    ocr_result = document_ocr_service.verify_document_content(
+        filename=file.filename or "document.pdf",
+        file_bytes=file_bytes,
+        expected_employee_name=emp_full_name
+    )
+
+    # Auto-update task status if verified
+    new_status = OnboardingStatus.COMPLETED if ocr_result.compliance_status == "VERIFIED" else OnboardingStatus.IN_PROGRESS
+    await onboarding_service.update_task_status(
+        db=db,
+        org_id=current_user.organization_id,
+        task_id=task_id,
+        update_data=OnboardingTaskUpdate(status=new_status),
+        actor_id=current_user.id
+    )
+
+    return ocr_result

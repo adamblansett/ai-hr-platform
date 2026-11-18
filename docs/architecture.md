@@ -134,3 +134,31 @@ When a candidate accepts an offer letter in `ai-recruiter`, the recruitment engi
   - `HR_ADMIN`: Full lifecycle management, policy authoring, leave configuration, review oversight.
   - `PEOPLE_MANAGER`: Direct reports directory access, leave approvals, 360 feedback reviews, goal tracking.
   - `EMPLOYEE`: Personal profile, self-service leave requests, peer reviews, handbook Q&A, task completion.
+
+---
+
+## 7. Phase 2 Enterprise Integrations & Production Topologies
+
+### Inbound SCIM 2.0 Server (`/scim/v2`)
+In addition to outbound identity provisioning, `ai-hr-platform` exposes an RFC 7643/7644 compliant inbound SCIM server allowing enterprise identity providers (Okta, Microsoft Entra ID / Azure AD, OneLogin) to push employee lifecycle events into the platform:
+- `GET /scim/v2/ServiceProviderConfig`: Capability discovery.
+- `GET /scim/v2/Users`: User queries with attribute filtering (`userName eq ...`).
+- `POST /scim/v2/Users`: Inbound employee creation and automatic onboarding assignment.
+- `PATCH /scim/v2/Users/{id}`: Attribute replacement and suspension (`active: false`).
+- `DELETE /scim/v2/Users/{id}`: Deprovisioning and termination.
+
+### Slack & Microsoft Teams Interactive Operations
+Enables conversational self-service and management approvals:
+- **Slash Commands:** `/ask-hr <question>` runs semantic retrieval against `pgvector` and returns grounded answers with citations.
+- **Interactive Leave Approvals:** Managers receive Slack Block Kit cards and Teams Adaptive Cards with one-click "Approve" / "Reject" buttons that update leave balances and log audit events.
+
+### Automated Document OCR & Verification
+The `DocumentOCRService` verifies digital onboarding uploads (I-9, W-4, direct deposit):
+- Evaluates form structure, legal name match, masked tax identifier presence, and signature certificates.
+- Automatically transitions tasks from `IN_PROGRESS` to `COMPLETED` when confidence exceeds 85%, or flags for manual review.
+
+### Cloud-Native Kubernetes Helm Architecture
+A production-ready Helm chart (`deploy/helm/ai-hr-platform`) provides:
+- Auto-scaling backend deployments with CPU-based HPA (3 to 10 replicas).
+- Independent Celery worker pods for background accruals and asynchronous LLM review synthesis.
+- Ingress with automatic Let's Encrypt TLS termination via `cert-manager`.
