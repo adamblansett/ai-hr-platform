@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.app.api.deps import get_db, get_current_user, require_role
+from backend.app.core.rate_limit import check_ai_rate_limit
 from backend.app.models.employee import Employee, EmployeeRole
 from backend.app.models.performance import PerformanceCycle, GoalOKR, ReviewFeedback
 from backend.app.schemas.performance import (
@@ -95,6 +96,7 @@ async def submit_review(
 async def synthesize_review(
     req: ReviewAISynthesisRequest,
     current_user: Employee = Depends(require_role([EmployeeRole.SUPER_ADMIN, EmployeeRole.HR_ADMIN, EmployeeRole.PEOPLE_MANAGER])),
+    _rate_limit: None = Depends(check_ai_rate_limit),
     db: AsyncSession = Depends(get_db)
 ):
     return await performance_service.synthesize_360(

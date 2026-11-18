@@ -58,7 +58,7 @@ services:
       REDIS_URL: redis://redis:6379/0
       OLLAMA_BASE_URL: http://ollama:11434
       SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
-      RECRUITER_WEBHOOK_SECRET: ${RECRUITER_WEBHOOK_SECRET:-dev-webhook-secret}
+      RECRUITER_WEBHOOK_SECRET: ${RECRUITER_WEBHOOK_SECRET:-dev-shared-recruiter-webhook-secret-key}
     depends_on:
       postgres:
         condition: service_healthy
@@ -99,6 +99,18 @@ services:
       - "3000:80"
     depends_on:
       - backend
+
+  gateway:
+    image: nginx:alpine
+    container_name: ai_hr_gateway
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - frontend
 
 volumes:
   postgres_data:

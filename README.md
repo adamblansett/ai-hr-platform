@@ -123,16 +123,36 @@ docker exec -it ai_hr_ollama ollama pull llama3.1:8b
 docker exec -it ai_hr_ollama ollama pull nomic-embed-text
 ```
 
-### 4. Verify Services
-- **Backend API Docs (Swagger):** [http://localhost:8000/api/v1/docs](http://localhost:8000/api/v1/docs)
+### 4. Seed Demo Data & Organizations
+Run the automated seeder to initialize the Acme Innovations tenant, demo roles, policies, and OKRs:
+```bash
+docker exec -it ai_hr_backend python -m backend.app.scripts.seed
+```
+
+Demo Credentials:
+- **HR Admin:** `admin@acme.corp` / `Password123!`
+- **Manager:** `manager.sarah@acme.corp` / `Password123!`
+- **Engineer:** `engineer.alex@acme.corp` / `Password123!`
+- **New Hire:** `newhire.elena@acme.corp` / `Password123!`
+
+### 5. Verify Services & Unified Ingress Gateway
+- **Unified Ingress (Nginx Gateway):** [http://localhost](http://localhost)
 - **Frontend Portal:** [http://localhost:3000](http://localhost:3000)
+- **Backend API Docs (Swagger):** [http://localhost:8000/api/v1/docs](http://localhost:8000/api/v1/docs)
+- **Service Telemetry & Metrics:** [http://localhost:8000/metrics](http://localhost:8000/metrics)
 - **Service Health Check:** [http://localhost:8000/health](http://localhost:8000/health)
 
 ---
 
-## Upstream Integration: `ai-recruiter` Webhook
+## Upstream Integration & Testing: `ai-recruiter` Webhook
 
-When a candidate accepts an offer in `ai-recruiter`, dispatch an HTTP POST request:
+### Automated Simulation CLI
+You can test candidate handoff with the built-in CLI simulator:
+```bash
+python backend/scripts/simulate_recruiter_handoff.py --first-name "Marcus" --last-name "Vance" --role "Staff AI Engineer"
+```
+
+### Manual Curl Example
 
 ```bash
 curl -X POST http://localhost:8000/api/v1/webhooks/recruiter/offer-accepted \
