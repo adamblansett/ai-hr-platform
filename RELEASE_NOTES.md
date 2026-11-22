@@ -1,3 +1,47 @@
+# Release v2.0.0 — `ai-hr-platform` (Major Milestone)
+
+**Release Date:** November 22, 2026  
+**License:** Apache 2.0  
+**Status:** Production Ready  
+
+Version 2.0.0 marks a major architectural milestone for `ai-hr-platform`, delivering market salary intelligence with compa-ratio retention audits, an end-to-end global visa and immigration case management engine with tax-grossed relocation disbursements, and a multi-tenant white-label branding suite with custom CNAME domain routing and cryptographic KMS key isolation.
+
+---
+
+## 🌟 What's New in v2.0.0
+
+### 1. AI Compensation Benchmarking & Market Salary Intelligence
+- **Radford & Option Impact Market Percentiles (`/api/v1/benchmarking`):**
+  - Continuous market compensation intelligence curves across `P25`, `P50` (median), `P75`, and `P90` percentiles for base pay, equity shares, and variable bonuses.
+- **Geographic Cost-of-Labor Multipliers:**
+  - Dynamic adjustments across geographic talent zones (Bay Area 1.25x, NYC 1.20x, Tier-2 Tech Hubs 1.05x, Remote US 1.00x, London, Berlin, Tokyo).
+- **Automated Compa-Ratio Parity & Retention Risk Audits (`GET /api/v1/benchmarking/audit/department`):**
+  - Computes employee compa-ratios (`current_base / market_p50`), categorizes band positions (`BELOW_RANGE`, `LOWER_QUARTILE`, `AT_MARKET`, `UPPER_QUARTILE`), flags flight risks, and forecasts departmental budget gaps to median.
+- **Salary Benchmarking Portal (`SalaryBenchmarkingView.tsx`):**
+  - Departmental compa-ratio dashboards, suggested merit adjustment recommendations, and market percentile curves.
+
+### 2. Visa, Global Immigration & Relocation Management
+- **End-to-End Legal Petition Tracking (`/api/v1/immigration/cases`):**
+  - Manages petitions across H-1B, L-1A/B, O-1, TN, and PERM Permanent Residency with automated case status progression (`INTAKE`, `DOL_PREVAILING_WAGE`, `USCIS_SUBMITTED`, `APPROVED`).
+- **USCIS Integration & Expiration Watchlist:**
+  - Receipt number tracking (e.g. `WAC-26-901-XXXXX`), adjudication center assignment, and automated alerts for petitions expiring within 90 days.
+- **Tax Gross-Up Relocation Disbursements (`POST /api/v1/immigration/cases/{id}/disburse-stipend`):**
+  - Automated 32% supplemental tax gross-up calculation guaranteeing employees receive full net relocation stipends via direct payroll ACH.
+- **Immigration Portal (`ImmigrationRelocationView.tsx`):**
+  - Petition timeline tracker, document verification counters, and relocation payout triggers.
+
+### 3. Multi-Tenant Enterprise White-Labeling & Custom Domain Routing
+- **Custom CNAME Domain Ingress (`/api/v1/branding`):**
+  - Organizations can route branded portals through custom corporate domains (e.g. `people.acme.corp`) with automated DNS CNAME resolution and TLS/SSL certificate issuance.
+- **Visual Brand Palette & Theme Engine:**
+  - Per-tenant customizable primary and secondary brand colors, custom vector logos, portal titles, and dedicated support emails.
+- **KMS Tenant Data Isolation:**
+  - Dedicated Customer Managed Key (CMK) encryption keys per tenant ensuring complete cryptographic isolation.
+- **White-Label Portal (`TenantBrandingView.tsx`):**
+  - Configuration console with interactive live preview widget demonstrating branded headers and secure portals.
+
+---
+
 # Release v1.9.0 — `ai-hr-platform`
 
 **Release Date:** November 22, 2026  

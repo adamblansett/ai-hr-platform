@@ -84,6 +84,22 @@ from backend.app.models.contractors import (
     ContractorStatus,
     InvoiceStatus,
 )
+from backend.app.models.benchmarking import (
+    SalaryBenchmark,
+    JobLevel,
+    GeoZone,
+)
+from backend.app.models.immigration import (
+    ImmigrationCase,
+    ImmigrationDocument,
+    VisaType,
+    CaseStatus,
+    DocumentType,
+)
+from backend.app.models.tenant_branding import (
+    TenantBrandingConfig,
+    SSLCertStatus,
+)
 
 __all__ = [
     "Base",
@@ -161,4 +177,14 @@ __all__ = [
     "TaxFormType",
     "ContractorStatus",
     "InvoiceStatus",
+    "SalaryBenchmark",
+    "JobLevel",
+    "GeoZone",
+    "ImmigrationCase",
+    "ImmigrationDocument",
+    "VisaType",
+    "CaseStatus",
+    "DocumentType",
+    "TenantBrandingConfig",
+    "SSLCertStatus",
 ]

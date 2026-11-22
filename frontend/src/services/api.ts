@@ -43,6 +43,13 @@ import {
   ContractorSOW,
   MilestoneInvoice,
   EORSummary,
+  SalaryBenchmark,
+  DepartmentBenchmarkingSummary,
+  ImmigrationCase,
+  RelocationDisbursementResult,
+  ImmigrationSummary,
+  TenantBrandingConfig,
+  DomainVerificationResult,
 } from '../types';
 
 const API_BASE = '/api/v1';
@@ -558,6 +565,67 @@ class ApiClient {
 
   async getEORSummary(): Promise<EORSummary> {
     return this.request<EORSummary>('/contractors/summary/eor');
+  }
+
+  // Salary Benchmarking & Market Intelligence
+  async getSalaryBenchmarks(department?: string, jobLevel?: string): Promise<SalaryBenchmark[]> {
+    const params = new URLSearchParams();
+    if (department) params.append('department', department);
+    if (jobLevel) params.append('job_level', jobLevel);
+    const q = params.toString() ? `?${params.toString()}` : '';
+    return this.request<SalaryBenchmark[]>(`/benchmarking/${q}`);
+  }
+
+  async auditDepartmentCompensation(department: string = 'Engineering'): Promise<DepartmentBenchmarkingSummary> {
+    return this.request<DepartmentBenchmarkingSummary>(`/benchmarking/audit/department?department=${encodeURIComponent(department)}`);
+  }
+
+  // Visa, Immigration & Global Relocation
+  async getImmigrationCases(employeeId?: string): Promise<ImmigrationCase[]> {
+    const q = employeeId ? `?employee_id=${employeeId}` : '';
+    return this.request<ImmigrationCase[]>(`/immigration/cases${q}`);
+  }
+
+  async createImmigrationCase(data: any): Promise<ImmigrationCase> {
+    return this.request<ImmigrationCase>('/immigration/cases', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateImmigrationStatus(caseId: string, newStatus: string, uscisReceiptNumber?: string): Promise<ImmigrationCase> {
+    return this.request<ImmigrationCase>(`/immigration/cases/${caseId}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ new_status: newStatus, uscis_receipt_number: uscisReceiptNumber }),
+    });
+  }
+
+  async disburseRelocationStipend(caseId: string): Promise<RelocationDisbursementResult> {
+    return this.request<RelocationDisbursementResult>(`/immigration/cases/${caseId}/disburse-stipend`, {
+      method: 'POST',
+    });
+  }
+
+  async getImmigrationSummary(): Promise<ImmigrationSummary> {
+    return this.request<ImmigrationSummary>('/immigration/summary');
+  }
+
+  // Multi-Tenant White-Labeling & Domain Routing
+  async getTenantBranding(organizationId: string = 'org-001'): Promise<TenantBrandingConfig> {
+    return this.request<TenantBrandingConfig>(`/branding/?organization_id=${organizationId}`);
+  }
+
+  async updateTenantBranding(data: any, organizationId: string = 'org-001'): Promise<TenantBrandingConfig> {
+    return this.request<TenantBrandingConfig>(`/branding/?organization_id=${organizationId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async verifyCustomDomain(organizationId: string = 'org-001'): Promise<DomainVerificationResult> {
+    return this.request<DomainVerificationResult>(`/branding/verify-domain?organization_id=${organizationId}`, {
+      method: 'POST',
+    });
   }
 }
 

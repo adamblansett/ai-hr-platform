@@ -602,3 +602,115 @@ export interface EORSummary {
   total_paid_this_month: number;
 }
 
+// v2.0.0 Interfaces: Salary Benchmarking, Visa & Immigration, Tenant White-Labeling
+
+export interface SalaryBenchmark {
+  id: string;
+  job_title: string;
+  department: string;
+  job_level: string;
+  geo_zone: string;
+  base_salary_p25: number;
+  base_salary_p50: number;
+  base_salary_p75: number;
+  base_salary_p90: number;
+  equity_shares_p50: number;
+  variable_bonus_target_pct: number;
+  currency: string;
+  updated_at: string;
+}
+
+export interface EmployeeCompensationAudit {
+  employee_id: string;
+  employee_name: string;
+  job_title: string;
+  department: string;
+  job_level: string;
+  geo_zone: string;
+  current_base_salary: number;
+  market_p50: number;
+  compa_ratio: number;
+  band_position: string;
+  suggested_merit_adjustment: number;
+  retention_risk_level: string;
+}
+
+export interface DepartmentBenchmarkingSummary {
+  department: string;
+  average_compa_ratio: number;
+  employees_below_p50_count: number;
+  total_budget_gap_to_p50: number;
+  audits: EmployeeCompensationAudit[];
+}
+
+export interface ImmigrationDocument {
+  id: string;
+  case_id: string;
+  document_type: string;
+  document_name: string;
+  document_url: string;
+  is_verified: boolean;
+  uploaded_at: string;
+}
+
+export interface ImmigrationCase {
+  id: string;
+  employee_id: string;
+  employee_name?: string;
+  visa_type: string;
+  case_status: string;
+  uscis_receipt_number?: string;
+  uscis_center?: string;
+  filing_date?: string;
+  expiry_date: string;
+  assigned_attorney: string;
+  relocation_stipend_amount: number;
+  stipend_disbursed: boolean;
+  tax_gross_up_amount: number;
+  created_at: string;
+  documents: ImmigrationDocument[];
+}
+
+export interface RelocationDisbursementResult {
+  case_id: string;
+  stipend_amount: number;
+  tax_gross_up_amount: number;
+  total_payable: number;
+  disbursement_reference: string;
+  message: string;
+}
+
+export interface ImmigrationSummary {
+  active_cases: number;
+  pending_uscis_receipts: number;
+  expiring_within_90_days_count: number;
+  total_relocation_outlay: number;
+}
+
+export interface TenantBrandingConfig {
+  id: string;
+  organization_id: string;
+  company_name: string;
+  custom_domain: string;
+  custom_domain_verified: boolean;
+  ssl_cert_status: string;
+  primary_color_hex: string;
+  secondary_color_hex: string;
+  logo_url: string;
+  favicon_url: string;
+  support_email: string;
+  portal_title: string;
+  kms_key_id: string;
+  updated_at: string;
+}
+
+export interface DomainVerificationResult {
+  custom_domain: string;
+  dns_cname_target: string;
+  dns_txt_verification_record: string;
+  is_verified: boolean;
+  ssl_cert_status: string;
+  message: string;
+}
+
+

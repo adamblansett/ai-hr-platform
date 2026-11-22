@@ -20,6 +20,9 @@ import { RewardsRecognitionView } from './components/RewardsRecognitionView';
 import { LearningDevelopmentView } from './components/LearningDevelopmentView';
 import { AssetFleetView } from './components/AssetFleetView';
 import { ContractorEorView } from './components/ContractorEorView';
+import { SalaryBenchmarkingView } from './components/SalaryBenchmarkingView';
+import { ImmigrationRelocationView } from './components/ImmigrationRelocationView';
+import { TenantBrandingView } from './components/TenantBrandingView';
 import { Employee } from './types';
 import { api } from './services/api';
 
@@ -145,6 +148,9 @@ export const App: React.FC = () => {
         {activeTab === 'contractors' && <ContractorEorView />}
         {activeTab === 'leave' && <LeaveManagementView />}
         {activeTab === 'compensation' && <CompensationView />}
+        {activeTab === 'benchmarking' && <SalaryBenchmarkingView />}
+        {activeTab === 'immigration' && <ImmigrationRelocationView />}
+        {activeTab === 'branding' && <TenantBrandingView />}
         {activeTab === 'benefits' && <BenefitsEnrollmentView />}
         {activeTab === 'pulse' && <PulseSentimentView />}
         {activeTab === 'coaching' && <CoachingCalibrationView />}

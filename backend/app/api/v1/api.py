@@ -26,6 +26,9 @@ from backend.app.api.v1.endpoints.recognition import router as recognition_route
 from backend.app.api.v1.endpoints.learning import router as learning_router
 from backend.app.api.v1.endpoints.assets import router as assets_router
 from backend.app.api.v1.endpoints.contractors import router as contractors_router
+from backend.app.api.v1.endpoints.benchmarking import router as benchmarking_router
+from backend.app.api.v1.endpoints.immigration import router as immigration_router
+from backend.app.api.v1.endpoints.tenant_branding import router as tenant_branding_router
 
 api_router = APIRouter()
 
@@ -56,3 +59,7 @@ api_router.include_router(recognition_router, prefix="/recognition", tags=["Empl
 api_router.include_router(learning_router, prefix="/learning", tags=["Learning & Development / LMS"])
 api_router.include_router(assets_router, prefix="/assets", tags=["Enterprise Hardware & Asset Fleet Management"])
 api_router.include_router(contractors_router, prefix="/contractors", tags=["Global Contractor & Vendor EOR Hub"])
+api_router.include_router(benchmarking_router, prefix="/benchmarking", tags=["Salary Benchmarking & Market Intelligence"])
+api_router.include_router(immigration_router, prefix="/immigration", tags=["Visa, Immigration & Relocation Management"])
+api_router.include_router(tenant_branding_router, prefix="/branding", tags=["Multi-Tenant White-Labeling & Domain Routing"])
+
