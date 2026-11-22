@@ -17,6 +17,9 @@ from backend.app.api.v1.endpoints.compliance import router as compliance_router
 from backend.app.api.v1.endpoints.outbound_webhooks import router as outbound_webhooks_router
 from backend.app.api.v1.endpoints.offboarding import router as offboarding_router
 from backend.app.api.v1.endpoints.coaching import router as coaching_router
+from backend.app.api.v1.endpoints.pulse import router as pulse_router
+from backend.app.api.v1.endpoints.benefits import router as benefits_router
+from backend.app.api.v1.endpoints.attendance import router as attendance_router
 
 api_router = APIRouter()
 
@@ -38,3 +41,6 @@ api_router.include_router(compliance_router, prefix="/compliance", tags=["Compli
 api_router.include_router(outbound_webhooks_router, prefix="/webhooks/outbound", tags=["Outbound Webhook Dispatcher (Workday/ADP/Gusto)"])
 api_router.include_router(offboarding_router, prefix="/offboarding", tags=["Employee Lifecycle & Offboarding"])
 api_router.include_router(coaching_router, prefix="/coaching", tags=["AI 1:1 Coaching & Performance Calibration"])
+api_router.include_router(pulse_router, prefix="/pulse", tags=["Employee Pulse & Sentiment Radar"])
+api_router.include_router(benefits_router, prefix="/benefits", tags=["Benefits Administration & AI Advisor"])
+api_router.include_router(attendance_router, prefix="/attendance", tags=["Time & Attendance Tracking (Overtime / FLSA)"])

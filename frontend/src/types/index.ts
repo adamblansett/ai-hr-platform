@@ -286,3 +286,96 @@ export interface CalibrationAnalysis {
   recommendations: string[];
   analyzed_at: string;
 }
+
+export interface PulseSurvey {
+  id: string;
+  organization_id: string;
+  title: string;
+  question: string;
+  category: string;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface DepartmentSentiment {
+  department: string;
+  period: string;
+  enps_score: number;
+  avg_rating: number;
+  burnout_risk_level: 'LOW' | 'MEDIUM' | 'HIGH' | 'ELEVATED';
+  total_responses: number;
+  ai_action_recommendations: string[];
+}
+
+export interface PulseAnalyticsSummary {
+  overall_enps: number;
+  overall_avg_rating: number;
+  total_responses: number;
+  departments: DepartmentSentiment[];
+  burnout_watchlists: string[];
+}
+
+export interface BenefitPlan {
+  id: string;
+  organization_id: string;
+  plan_name: string;
+  plan_type: string;
+  provider: string;
+  tier_name: string;
+  monthly_employee_premium: number;
+  monthly_employer_contribution: number;
+  annual_deductible: number;
+  out_of_pocket_max: number;
+  summary_of_benefits?: string;
+  is_active: boolean;
+}
+
+export interface BenefitElection {
+  id: string;
+  employee_id: string;
+  plan_id: string;
+  plan_name?: string;
+  plan_type?: string;
+  coverage_tier: string;
+  effective_date: string;
+  employee_monthly_cost: number;
+  employer_monthly_cost: number;
+  status: string;
+  created_at: string;
+}
+
+export interface BenefitsAdvisorResult {
+  question: string;
+  recommended_plan_name: string;
+  recommendation_reason: string;
+  estimated_annual_employee_cost: number;
+  coverage_highlights: string[];
+}
+
+export interface TimeSheetEntry {
+  id: string;
+  employee_id: string;
+  shift_date: string;
+  clock_in: string;
+  clock_out?: string;
+  total_hours: number;
+  regular_hours: number;
+  overtime_hours: number;
+  double_time_hours: number;
+  meal_break_minutes: number;
+  meal_penalty_flag: boolean;
+  status: string;
+  notes?: string;
+}
+
+export interface AttendanceSummary {
+  employee_id: string;
+  period_start: string;
+  period_end: string;
+  total_shifts: number;
+  total_regular_hours: number;
+  total_overtime_hours: number;
+  total_double_time_hours: number;
+  meal_penalty_violations: number;
+  estimated_payable_hours: number;
+}

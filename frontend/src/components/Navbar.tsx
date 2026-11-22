@@ -15,12 +15,16 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, user, o
     { id: 'directory', label: 'Directory' },
     { id: 'onboarding', label: 'Onboarding' },
     { id: 'offboarding', label: 'Offboarding' },
-    { id: 'policies', label: 'Policy AI' },
+    { id: 'attendance', label: 'Attendance & Hours' },
     { id: 'leave', label: 'Leave & PTO' },
     { id: 'compensation', label: 'Compensation & Equity' },
-    { id: 'coaching', label: '1:1 Coaching & Calibration' },
-    { id: 'compliance', label: 'Compliance & Audit' },
-    { id: 'integrations', label: 'Integrations & Webhooks' },
+    { id: 'benefits', label: 'Benefits & Health' },
+    { id: 'pulse', label: 'Pulse & Sentiment' },
+    { id: 'coaching', label: '1:1 Coaching' },
+    { id: 'localization', label: 'Global & Holidays' },
+    { id: 'policies', label: 'Policy AI' },
+    { id: 'compliance', label: 'Compliance' },
+    { id: 'integrations', label: 'Integrations' },
   ];
 
   return (

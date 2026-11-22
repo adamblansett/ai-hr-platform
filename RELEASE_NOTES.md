@@ -1,3 +1,53 @@
+# Release v1.7.0 — `ai-hr-platform`
+
+**Release Date:** November 22, 2026  
+**License:** Apache 2.0  
+**Status:** Production Ready  
+
+Version 1.7.0 delivers autonomous employee sentiment and burnout radar tracking with cryptographic zero-identifiability, an automated benefits administration engine with an AI open-enrollment advisor, and a statutory FLSA time and attendance compliance engine.
+
+---
+
+## 🌟 What's New in v1.7.0
+
+### 1. Autonomous Employee Pulse & Team Sentiment Radar
+- **Anonymous Micro-Pulse Engine (`/api/v1/pulse`):**
+  - Instant and recurring employee pulse surveying with Likert scores across work-life balance, psychological safety, leadership alignment, and role clarity.
+- **Zero-Identifiability Cryptographic Privacy:**
+  - Respondent identity protected by SHA-256 salted hash decoupling (`user_id + survey_id + salt`), enforcing one-response-per-employee integrity without ever persisting raw employee identifiers on survey response records.
+- **eNPS & Burnout Watchlist Analytics:**
+  - Automated calculation of Employee Net Promoter Score (eNPS) from promoter/passive/detractor distributions.
+  - Multi-dimensional burnout index calculation with threshold-triggered department alert status (`HEALTHY`, `MODERATE`, `BURNOUT_RISK`).
+- **AI Action Recommendations:**
+  - Autonomous synthesis of low-scoring sentiment facets into targeted manager and HR leadership interventions.
+- **Interactive Sentiment Radar (`PulseSentimentView.tsx`):**
+  - Real-time departmental metrics, eNPS indicator badges, and direct response capture modal.
+
+### 2. Automated Benefits Administration & AI Open Enrollment Advisor
+- **Comprehensive Benefit Catalog (`/api/v1/benefits`):**
+  - Pre-seeded enterprise healthcare and wellness tiers: Standard PPO, High-Deductible Health Plan (HDHP + HSA), Comprehensive Dental, and Vision Care.
+- **Tier-Based Payroll Deductions:**
+  - Automated employer/employee premium split calculation supporting `EMPLOYEE_ONLY`, `EMPLOYEE_SPOUSE`, `EMPLOYEE_CHILDREN`, and `FAMILY` coverage tiers.
+- **AI Autonomous Benefits Advisor (`POST /api/v1/benefits/advisor`):**
+  - Context-grounded advisory engine evaluating employee family size, anticipated medical visits, and prescription needs to recommend optimal health plans and HSA savings strategies.
+- **Self-Service Enrollment Portal (`BenefitsEnrollmentView.tsx`):**
+  - Plan comparison matrix, interactive election selector, and AI plan advisory assistant.
+
+### 3. Time & Attendance Engine with Statutory FLSA Overtime Compliance
+- **Time Clock & Timesheet Management (`/api/v1/attendance`):**
+  - Employee punch-in, punch-out, and break logging with automated shift duration calculation.
+- **Statutory Overtime Compliance Rules Engine:**
+  - Automated FLSA and state labor standard compliance computation:
+    - Regular hours: <= 8.0 hours/day.
+    - 1.5x Overtime: > 8.0 and <= 12.0 hours/day.
+    - 2.0x Double-Time: > 12.0 hours/day.
+- **Meal Break Penalty Violation Auditing:**
+  - Proactive audit flag triggered for shifts exceeding 6.0 hours with under 30 minutes of meal break time.
+- **Time & Attendance Portal (`TimeAttendanceView.tsx`):**
+  - Real-time punch clock interface, historical timesheet records table, and compliance audit status indicators.
+
+---
+
 # Release v1.6.0 — `ai-hr-platform`
 
 **Release Date:** November 22, 2026  

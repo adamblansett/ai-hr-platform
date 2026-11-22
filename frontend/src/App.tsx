@@ -11,6 +11,9 @@ import { IntegrationsView } from './components/IntegrationsView';
 import { OffboardingView } from './components/OffboardingView';
 import { OrgChartView } from './components/OrgChartView';
 import { CoachingCalibrationView } from './components/CoachingCalibrationView';
+import { PulseSentimentView } from './components/PulseSentimentView';
+import { BenefitsEnrollmentView } from './components/BenefitsEnrollmentView';
+import { TimeAttendanceView } from './components/TimeAttendanceView';
 import { Employee } from './types';
 import { api } from './services/api';
 
@@ -127,11 +130,14 @@ export const App: React.FC = () => {
         {activeTab === 'directory' && <DirectoryView />}
         {activeTab === 'onboarding' && <OnboardingView />}
         {activeTab === 'offboarding' && <OffboardingView />}
-        {activeTab === 'policies' && <PolicyAssistantView />}
+        {activeTab === 'attendance' && <TimeAttendanceView />}
         {activeTab === 'leave' && <LeaveManagementView />}
         {activeTab === 'compensation' && <CompensationView />}
+        {activeTab === 'benefits' && <BenefitsEnrollmentView />}
+        {activeTab === 'pulse' && <PulseSentimentView />}
         {activeTab === 'coaching' && <CoachingCalibrationView />}
         {activeTab === 'localization' && <LocalizationView />}
+        {activeTab === 'policies' && <PolicyAssistantView />}
         {activeTab === 'compliance' && <ComplianceView />}
         {activeTab === 'integrations' && <IntegrationsView />}
         {activeTab === 'performance' && (

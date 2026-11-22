@@ -31,6 +31,18 @@ from backend.app.models.coaching import (
     OneOnOneMeeting,
     CalibrationSession,
 )
+from backend.app.models.pulse import (
+    PulseSurvey,
+    PulseResponse,
+    DepartmentSentimentScore,
+)
+from backend.app.models.benefits import (
+    BenefitPlan,
+    EmployeeBenefitElection,
+)
+from backend.app.models.attendance import (
+    TimeSheetEntry,
+)
 
 __all__ = [
     "Base",
@@ -73,4 +85,10 @@ __all__ = [
     "ExitInterviewFeedback",
     "OneOnOneMeeting",
     "CalibrationSession",
+    "PulseSurvey",
+    "PulseResponse",
+    "DepartmentSentimentScore",
+    "BenefitPlan",
+    "EmployeeBenefitElection",
+    "TimeSheetEntry",
 ]

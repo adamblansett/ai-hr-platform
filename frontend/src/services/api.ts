@@ -19,6 +19,13 @@ import {
   OffboardingRecord,
   OneOnOneMeeting,
   CalibrationAnalysis,
+  PulseSurvey,
+  PulseAnalyticsSummary,
+  BenefitPlan,
+  BenefitElection,
+  BenefitsAdvisorResult,
+  TimeSheetEntry,
+  AttendanceSummary,
 } from '../types';
 
 const API_BASE = '/api/v1';
@@ -266,6 +273,68 @@ class ApiClient {
 
   async getCalibrationHistory(): Promise<CalibrationAnalysis[]> {
     return this.request<CalibrationAnalysis[]>('/coaching/calibration/history');
+  }
+
+  // Employee Pulse & Sentiment Radar
+  async getActiveSurveys(): Promise<PulseSurvey[]> {
+    return this.request<PulseSurvey[]>('/pulse/active');
+  }
+
+  async submitPulseResponse(surveyId: string, data: { rating: number; feedback_text?: string }): Promise<any> {
+    return this.request(`/pulse/surveys/${surveyId}/respond`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getPulseAnalytics(): Promise<PulseAnalyticsSummary> {
+    return this.request<PulseAnalyticsSummary>('/pulse/analytics');
+  }
+
+  // Benefits Administration & AI Advisor
+  async getBenefitPlans(): Promise<BenefitPlan[]> {
+    return this.request<BenefitPlan[]>('/benefits/plans');
+  }
+
+  async getMyBenefitElections(): Promise<BenefitElection[]> {
+    return this.request<BenefitElection[]>('/benefits/elections/me');
+  }
+
+  async enrollBenefitPlan(data: { plan_id: string; coverage_tier: string; effective_date: string }): Promise<BenefitElection> {
+    return this.request<BenefitElection>('/benefits/elections', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async askBenefitsAdvisor(data: { question: string; family_members_count?: number; has_chronic_needs?: boolean }): Promise<BenefitsAdvisorResult> {
+    return this.request<BenefitsAdvisorResult>('/benefits/advisor/query', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // Time & Attendance (Overtime / FLSA)
+  async clockIn(notes?: string): Promise<TimeSheetEntry> {
+    return this.request<TimeSheetEntry>('/attendance/clock-in', {
+      method: 'POST',
+      body: JSON.stringify({ notes }),
+    });
+  }
+
+  async clockOut(mealBreakMinutes: number = 30, notes?: string): Promise<TimeSheetEntry> {
+    return this.request<TimeSheetEntry>('/attendance/clock-out', {
+      method: 'POST',
+      body: JSON.stringify({ meal_break_minutes: mealBreakMinutes, notes }),
+    });
+  }
+
+  async getMyTimesheets(): Promise<TimeSheetEntry[]> {
+    return this.request<TimeSheetEntry[]>('/attendance/timesheets/me');
+  }
+
+  async getAttendanceSummary(employeeId: string): Promise<AttendanceSummary> {
+    return this.request<AttendanceSummary>(`/attendance/summary/${employeeId}`);
   }
 }
 
