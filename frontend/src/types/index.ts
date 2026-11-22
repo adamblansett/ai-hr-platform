@@ -488,3 +488,117 @@ export interface MilestoneEvent {
   suggested_award_points: number;
 }
 
+// v1.9.0 Interfaces: LMS, Hardware Fleet, EOR Hub
+
+export interface Course {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  duration_minutes: number;
+  is_mandatory: boolean;
+  passing_score_percentage: number;
+  certification_validity_days: number;
+}
+
+export interface CourseEnrollment {
+  id: string;
+  employee_id: string;
+  course_id: string;
+  course_title?: string;
+  status: string;
+  progress_percentage: number;
+  score?: number;
+  enrolled_at: string;
+  completed_at?: string;
+  expires_at?: string;
+  certificate_id?: string;
+}
+
+export interface ComplianceAuditSummary {
+  total_mandatory_courses: number;
+  total_enrolled: number;
+  total_completed: number;
+  compliance_rate_percentage: number;
+  overdue_recertifications_count: number;
+  recommendations: string[];
+}
+
+export interface HardwareAsset {
+  id: string;
+  asset_tag: string;
+  serial_number: string;
+  device_model: string;
+  category: string;
+  status: string;
+  assigned_to_id?: string;
+  assigned_to_name?: string;
+  assigned_at?: string;
+  purchase_date: string;
+  warranty_expiry: string;
+  device_condition: string;
+  mdm_enrolled: boolean;
+  mdm_provider: string;
+  mdm_device_id?: string;
+  mdm_last_checkin?: string;
+  remote_wipe_status: string;
+  notes?: string;
+}
+
+export interface FleetSummary {
+  total_assets: number;
+  assigned_assets: number;
+  in_stock_assets: number;
+  mdm_compliance_rate: number;
+  pending_wipe_count: number;
+}
+
+export interface ContractorProfile {
+  id: string;
+  full_name: string;
+  email: string;
+  country: string;
+  entity_type: string;
+  tax_form_type: string;
+  tax_form_verified: boolean;
+  tax_id_masked?: string;
+  hourly_rate: number;
+  currency: string;
+  status: string;
+  created_at: string;
+}
+
+export interface ContractorSOW {
+  id: string;
+  contractor_id: string;
+  title: string;
+  total_budget: number;
+  currency: string;
+  start_date: string;
+  end_date: string;
+  status: string;
+  deliverables_description?: string;
+}
+
+export interface MilestoneInvoice {
+  id: string;
+  sow_id: string;
+  contractor_id: string;
+  milestone_title: string;
+  amount: number;
+  currency: string;
+  status: string;
+  submitted_at: string;
+  approved_at?: string;
+  paid_at?: string;
+  payout_tx_hash?: string;
+}
+
+export interface EORSummary {
+  active_contractors: number;
+  pending_tax_verifications: number;
+  total_active_sows: number;
+  total_invoiced_this_month: number;
+  total_paid_this_month: number;
+}
+

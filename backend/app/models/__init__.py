@@ -63,6 +63,27 @@ from backend.app.models.recognition import (
     CoreValue,
     MilestoneType,
 )
+from backend.app.models.learning import (
+    Course,
+    CourseEnrollment,
+    CourseCategory,
+    EnrollmentStatus,
+)
+from backend.app.models.assets import (
+    HardwareAsset,
+    AssetCategory,
+    AssetStatus,
+    MDMProvider,
+    RemoteWipeStatus,
+)
+from backend.app.models.contractors import (
+    ContractorProfile,
+    ContractorSOW,
+    MilestoneInvoice,
+    TaxFormType,
+    ContractorStatus,
+    InvoiceStatus,
+)
 
 __all__ = [
     "Base",
@@ -125,4 +146,19 @@ __all__ = [
     "EmployeeRecognitionWallet",
     "CoreValue",
     "MilestoneType",
+    "Course",
+    "CourseEnrollment",
+    "CourseCategory",
+    "EnrollmentStatus",
+    "HardwareAsset",
+    "AssetCategory",
+    "AssetStatus",
+    "MDMProvider",
+    "RemoteWipeStatus",
+    "ContractorProfile",
+    "ContractorSOW",
+    "MilestoneInvoice",
+    "TaxFormType",
+    "ContractorStatus",
+    "InvoiceStatus",
 ]

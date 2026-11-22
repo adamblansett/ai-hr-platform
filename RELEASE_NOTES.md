@@ -1,3 +1,49 @@
+# Release v1.9.0 — `ai-hr-platform`
+
+**Release Date:** November 22, 2026  
+**License:** Apache 2.0  
+**Status:** Production Ready  
+
+Version 1.9.0 expands the platform with an enterprise Learning & Development (L&D) / Mandatory Compliance LMS with verifiable digital certificates, an IT Hardware & Asset Fleet Management system with MDM integration and zero-touch remote wipe, and a Global Contractor & Vendor Employer of Record (EOR) Hub with automated W-8BEN/W-9 audit verification and cross-border milestone payouts.
+
+---
+
+## 🌟 What's New in v1.9.0
+
+### 1. Learning & Development (L&D) & Mandatory Compliance LMS
+- **Statutory & Role-Based Course Catalog (`/api/v1/learning`):**
+  - Pre-seeded modules: Annual SOC 2 Information Security Awareness, Preventing Workplace Harassment (CA/NY standard), HIPAA Privacy & Security, and Cloud Native Architecture.
+- **Progress Tracking & Digital Certificates:**
+  - Automated progress tracking, exam scoring against passing thresholds, and generation of verifiable certificate IDs (`CERT-YYYY-XXXX`).
+  - Automated certificate expiration tracking and recertification cycle calculations.
+- **Enterprise Compliance Audit (`GET /api/v1/learning/compliance-audit`):**
+  - Aggregates company-wide compliance completion rates, identifies overdue recertifications, and provides automated auditor recommendations.
+- **Interactive LMS Dashboard (`LearningDevelopmentView.tsx`):**
+  - Category filters, progress sliders, instant exam completion, and digital credential verification cards.
+
+### 2. Enterprise Hardware & Asset Fleet Management
+- **Hardware Inventory Lifecycle (`/api/v1/assets`):**
+  - Register workstations, monitors, and security keys with serial numbers, asset tags, purchase dates, warranty expirations, and device condition grades.
+- **MDM Provider Integration & Device Health:**
+  - Support for Jamf Pro, Microsoft Intune, and Kandji MDM profiles with automated check-in logging.
+- **Cryptographic Remote Wipe Protocol (`POST /api/v1/assets/{id}/remote-wipe`):**
+  - Dispatch zero-touch sanitization commands across enrolled devices during offboarding or critical security breach protocols.
+- **Asset Directory & Fleet Portal (`AssetFleetView.tsx`):**
+  - Asset status indicators, one-click assign/return actions, fleet metrics, and remote wipe confirmation modal.
+
+### 3. Global Contractor & Vendor EOR (Employer of Record) Hub
+- **International Contractor Registry (`/api/v1/contractors`):**
+  - Multi-country contractor onboarding supporting individuals, LLCs, and corporations with hourly rate and currency configuration.
+- **Tax Compliance & Audit Verification:**
+  - W-8BEN (foreign individuals), W-8BEN-E (foreign entities), W-9, and VAT registration collection and one-click verification audits.
+- **Statements of Work (SOWs) & Milestone Invoices:**
+  - Milestone-based deliverables tracking against fixed budgets.
+  - Manager approval workflow and automated cross-border payout disbursement generating traceable payment hashes (`TX-EOR-{CURRENCY}-{HASH}`).
+- **Global EOR Hub View (`ContractorEorView.tsx`):**
+  - Contractor roster, tax compliance status badges, milestone invoice ledger, and international wire execution buttons.
+
+---
+
 # Release v1.8.0 — `ai-hr-platform`
 
 **Release Date:** November 22, 2026  

@@ -23,6 +23,9 @@ from backend.app.api.v1.endpoints.attendance import router as attendance_router
 from backend.app.api.v1.endpoints.expenses import router as expenses_router
 from backend.app.api.v1.endpoints.safety import router as safety_router
 from backend.app.api.v1.endpoints.recognition import router as recognition_router
+from backend.app.api.v1.endpoints.learning import router as learning_router
+from backend.app.api.v1.endpoints.assets import router as assets_router
+from backend.app.api.v1.endpoints.contractors import router as contractors_router
 
 api_router = APIRouter()
 
@@ -50,3 +53,6 @@ api_router.include_router(attendance_router, prefix="/attendance", tags=["Time &
 api_router.include_router(expenses_router, prefix="/expenses", tags=["Expense Reimbursement & Policy Audit"])
 api_router.include_router(safety_router, prefix="/safety", tags=["Workplace Health, Safety & OSHA Incident Tracking"])
 api_router.include_router(recognition_router, prefix="/recognition", tags=["Employee Engagement & Peer Recognition"])
+api_router.include_router(learning_router, prefix="/learning", tags=["Learning & Development / LMS"])
+api_router.include_router(assets_router, prefix="/assets", tags=["Enterprise Hardware & Asset Fleet Management"])
+api_router.include_router(contractors_router, prefix="/contractors", tags=["Global Contractor & Vendor EOR Hub"])

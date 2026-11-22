@@ -34,6 +34,15 @@ import {
   RewardCatalogItem,
   EmployeeWallet,
   MilestoneEvent,
+  Course,
+  CourseEnrollment,
+  ComplianceAuditSummary,
+  HardwareAsset,
+  FleetSummary,
+  ContractorProfile,
+  ContractorSOW,
+  MilestoneInvoice,
+  EORSummary,
 } from '../types';
 
 const API_BASE = '/api/v1';
@@ -422,6 +431,133 @@ class ApiClient {
 
   async getUpcomingMilestones(): Promise<MilestoneEvent[]> {
     return this.request<MilestoneEvent[]>('/recognition/milestones');
+  }
+
+  // Learning & Development / LMS
+  async getCourses(category?: string): Promise<Course[]> {
+    const q = category ? `?category=${category}` : '';
+    return this.request<Course[]>(`/learning/courses${q}`);
+  }
+
+  async enrollCourse(courseId: string, employeeId: string = 'emp-001'): Promise<CourseEnrollment> {
+    return this.request<CourseEnrollment>('/learning/enroll', {
+      method: 'POST',
+      body: JSON.stringify({ course_id: courseId, employee_id: employeeId }),
+    });
+  }
+
+  async updateCourseProgress(enrollmentId: string, progress: number, score?: number): Promise<CourseEnrollment> {
+    return this.request<CourseEnrollment>(`/learning/enrollments/${enrollmentId}/progress`, {
+      method: 'PATCH',
+      body: JSON.stringify({ progress_percentage: progress, score }),
+    });
+  }
+
+  async getMyEnrollments(employeeId: string = 'emp-001'): Promise<CourseEnrollment[]> {
+    return this.request<CourseEnrollment[]>(`/learning/enrollments/me?employee_id=${employeeId}`);
+  }
+
+  async getComplianceAudit(): Promise<ComplianceAuditSummary> {
+    return this.request<ComplianceAuditSummary>('/learning/compliance-audit');
+  }
+
+  // Hardware Asset Fleet Management
+  async getHardwareAssets(category?: string, status?: string): Promise<HardwareAsset[]> {
+    const params = new URLSearchParams();
+    if (category) params.append('category', category);
+    if (status) params.append('status', status);
+    const q = params.toString() ? `?${params.toString()}` : '';
+    return this.request<HardwareAsset[]>(`/assets/${q}`);
+  }
+
+  async createHardwareAsset(data: any): Promise<HardwareAsset> {
+    return this.request<HardwareAsset>('/assets/', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async assignHardwareAsset(assetId: string, employeeId: string): Promise<HardwareAsset> {
+    return this.request<HardwareAsset>(`/assets/${assetId}/assign`, {
+      method: 'POST',
+      body: JSON.stringify({ employee_id: employeeId }),
+    });
+  }
+
+  async unassignHardwareAsset(assetId: string): Promise<HardwareAsset> {
+    return this.request<HardwareAsset>(`/assets/${assetId}/unassign`, {
+      method: 'POST',
+    });
+  }
+
+  async triggerRemoteWipe(assetId: string, reason: string): Promise<HardwareAsset> {
+    return this.request<HardwareAsset>(`/assets/${assetId}/remote-wipe`, {
+      method: 'POST',
+      body: JSON.stringify({ reason }),
+    });
+  }
+
+  async getFleetSummary(): Promise<FleetSummary> {
+    return this.request<FleetSummary>('/assets/summary/fleet');
+  }
+
+  // Global Contractor & Vendor EOR Hub
+  async getContractors(country?: string): Promise<ContractorProfile[]> {
+    const q = country ? `?country=${country}` : '';
+    return this.request<ContractorProfile[]>(`/contractors/${q}`);
+  }
+
+  async createContractor(data: any): Promise<ContractorProfile> {
+    return this.request<ContractorProfile>('/contractors/', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async verifyContractorTax(contractorId: string): Promise<ContractorProfile> {
+    return this.request<ContractorProfile>(`/contractors/${contractorId}/verify-tax`, {
+      method: 'POST',
+    });
+  }
+
+  async getSOWs(contractorId?: string): Promise<ContractorSOW[]> {
+    const q = contractorId ? `?contractor_id=${contractorId}` : '';
+    return this.request<ContractorSOW[]>(`/contractors/sows${q}`);
+  }
+
+  async createSOW(data: any): Promise<ContractorSOW> {
+    return this.request<ContractorSOW>('/contractors/sows', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getContractorInvoices(contractorId?: string): Promise<MilestoneInvoice[]> {
+    const q = contractorId ? `?contractor_id=${contractorId}` : '';
+    return this.request<MilestoneInvoice[]>(`/contractors/invoices${q}`);
+  }
+
+  async submitContractorInvoice(data: any): Promise<MilestoneInvoice> {
+    return this.request<MilestoneInvoice>('/contractors/invoices', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async approveContractorInvoice(invoiceId: string): Promise<MilestoneInvoice> {
+    return this.request<MilestoneInvoice>(`/contractors/invoices/${invoiceId}/approve`, {
+      method: 'POST',
+    });
+  }
+
+  async payContractorInvoice(invoiceId: string): Promise<MilestoneInvoice> {
+    return this.request<MilestoneInvoice>(`/contractors/invoices/${invoiceId}/pay`, {
+      method: 'POST',
+    });
+  }
+
+  async getEORSummary(): Promise<EORSummary> {
+    return this.request<EORSummary>('/contractors/summary/eor');
   }
 }
 

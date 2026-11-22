@@ -17,6 +17,9 @@ import { TimeAttendanceView } from './components/TimeAttendanceView';
 import { ExpenseAuditView } from './components/ExpenseAuditView';
 import { SafetyComplianceView } from './components/SafetyComplianceView';
 import { RewardsRecognitionView } from './components/RewardsRecognitionView';
+import { LearningDevelopmentView } from './components/LearningDevelopmentView';
+import { AssetFleetView } from './components/AssetFleetView';
+import { ContractorEorView } from './components/ContractorEorView';
 import { Employee } from './types';
 import { api } from './services/api';
 
@@ -137,6 +140,9 @@ export const App: React.FC = () => {
         {activeTab === 'expenses' && <ExpenseAuditView />}
         {activeTab === 'safety' && <SafetyComplianceView />}
         {activeTab === 'recognition' && <RewardsRecognitionView />}
+        {activeTab === 'learning' && <LearningDevelopmentView />}
+        {activeTab === 'assets' && <AssetFleetView />}
+        {activeTab === 'contractors' && <ContractorEorView />}
         {activeTab === 'leave' && <LeaveManagementView />}
         {activeTab === 'compensation' && <CompensationView />}
         {activeTab === 'benefits' && <BenefitsEnrollmentView />}
