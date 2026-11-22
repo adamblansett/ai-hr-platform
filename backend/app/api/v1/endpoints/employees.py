@@ -86,6 +86,55 @@ async def update_own_profile(
         update_data=update_data
     )
 
+@router.get("/org-chart", response_model=list[OrgChartNode], summary="Get organizational hierarchy tree")
+async def get_org_chart(
+    current_user: Employee = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    return await employee_service.build_org_chart(db=db, org_id=current_user.organization_id)
+
+@router.get("/org-chart/stats", summary="Get organizational span of control and structure metrics")
+async def get_org_chart_stats(
+    current_user: Employee = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    chart = await employee_service.build_org_chart(db=db, org_id=current_user.organization_id)
+    
+    total_nodes = 0
+    managers = 0
+    direct_report_counts = []
+    overloaded_managers = []
+
+    def traverse(node: OrgChartNode):
+        nonlocal total_nodes, managers
+        total_nodes += 1
+        reports = len(node.direct_reports)
+        if reports > 0:
+            managers += 1
+            direct_report_counts.append(reports)
+            if reports > 8:
+                overloaded_managers.append({
+                    "id": str(node.id),
+                    "name": node.name,
+                    "job_title": node.job_title,
+                    "direct_reports": reports
+                })
+        for child in node.direct_reports:
+            traverse(child)
+
+    for root in chart:
+        traverse(root)
+
+    avg_span = round(sum(direct_report_counts) / len(direct_report_counts), 1) if direct_report_counts else 0.0
+
+    return {
+        "total_active_employees": total_nodes,
+        "total_people_managers": managers,
+        "average_span_of_control": avg_span,
+        "overloaded_managers_count": len(overloaded_managers),
+        "overloaded_managers": overloaded_managers
+    }
+
 @router.get("/{id}", response_model=EmployeeResponse, summary="Get employee details by ID")
 async def get_employee(
     id: uuid.UUID,

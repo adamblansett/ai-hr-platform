@@ -22,6 +22,15 @@ from backend.app.models.outbound_webhook import (
     WebhookSubscription,
     WebhookDeliveryLog,
 )
+from backend.app.models.offboarding import (
+    OffboardingRecord,
+    OffboardingTask,
+    ExitInterviewFeedback,
+)
+from backend.app.models.coaching import (
+    OneOnOneMeeting,
+    CalibrationSession,
+)
 
 __all__ = [
     "Base",
@@ -59,4 +68,9 @@ __all__ = [
     "InternalRequisition",
     "WebhookSubscription",
     "WebhookDeliveryLog",
+    "OffboardingRecord",
+    "OffboardingTask",
+    "ExitInterviewFeedback",
+    "OneOnOneMeeting",
+    "CalibrationSession",
 ]

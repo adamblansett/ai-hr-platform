@@ -14,6 +14,11 @@ import {
   WebhookSubscription,
   WebhookDeliveryLog,
   WebhookTestPingResult,
+  OrgChartNode,
+  OrgChartStats,
+  OffboardingRecord,
+  OneOnOneMeeting,
+  CalibrationAnalysis,
 } from '../types';
 
 const API_BASE = '/api/v1';
@@ -205,6 +210,62 @@ class ApiClient {
 
   async getOutboundDeliveryLogs(subId: string): Promise<WebhookDeliveryLog[]> {
     return this.request<WebhookDeliveryLog[]>(`/webhooks/outbound/subscriptions/${subId}/logs`);
+  }
+
+  // Org Chart & Hierarchy
+  async getOrgChart(): Promise<OrgChartNode[]> {
+    return this.request<OrgChartNode[]>('/employees/org-chart');
+  }
+
+  async getOrgChartStats(): Promise<OrgChartStats> {
+    return this.request<OrgChartStats>('/employees/org-chart/stats');
+  }
+
+  // Offboarding
+  async getOffboardingRecords(): Promise<OffboardingRecord[]> {
+    return this.request<OffboardingRecord[]>('/offboarding');
+  }
+
+  async initiateOffboarding(data: { employee_id: string; last_working_day: string; termination_reason: string; notes?: string }): Promise<OffboardingRecord> {
+    return this.request<OffboardingRecord>('/offboarding/initiate', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deprovisionSCIM(offboardingId: string): Promise<OffboardingRecord> {
+    return this.request<OffboardingRecord>(`/offboarding/${offboardingId}/deprovision-scim`, {
+      method: 'POST',
+    });
+  }
+
+  async toggleOffboardingTask(taskId: string): Promise<any> {
+    return this.request(`/offboarding/tasks/${taskId}/toggle`, {
+      method: 'PATCH',
+    });
+  }
+
+  // 1:1 Coaching & Calibration
+  async getMyOneOnOnes(): Promise<OneOnOneMeeting[]> {
+    return this.request<OneOnOneMeeting[]>('/coaching/1on1/me');
+  }
+
+  async generateOneOnOneAgenda(data: { employee_id: string; scheduled_date: string; focus_area?: string }): Promise<OneOnOneMeeting> {
+    return this.request<OneOnOneMeeting>('/coaching/1on1/generate-agenda', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async analyzeCalibration(data: { cycle_name: string; department: string; ratings: number[] }): Promise<CalibrationAnalysis> {
+    return this.request<CalibrationAnalysis>('/coaching/calibration/analyze', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getCalibrationHistory(): Promise<CalibrationAnalysis[]> {
+    return this.request<CalibrationAnalysis[]>('/coaching/calibration/history');
   }
 }
 

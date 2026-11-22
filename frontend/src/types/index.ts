@@ -212,3 +212,77 @@ export interface WebhookTestPingResult {
   test_event: string;
   timestamp: string;
 }
+
+export interface OrgChartNode {
+  id: string;
+  name: string;
+  email: string;
+  job_title: string;
+  department: string;
+  manager_id?: string;
+  direct_reports: OrgChartNode[];
+}
+
+export interface OrgChartStats {
+  total_active_employees: number;
+  total_people_managers: number;
+  average_span_of_control: number;
+  overloaded_managers_count: number;
+  overloaded_managers: Array<{
+    id: string;
+    name: string;
+    job_title: string;
+    direct_reports: number;
+  }>;
+}
+
+export interface OffboardingTask {
+  id: string;
+  title: string;
+  category: string;
+  assigned_to: string;
+  is_completed: boolean;
+  completed_at?: string;
+}
+
+export interface OffboardingRecord {
+  id: string;
+  organization_id: string;
+  employee_id: string;
+  employee_name?: string;
+  last_working_day: string;
+  termination_reason: string;
+  status: string;
+  scim_deprovisioned: boolean;
+  equipment_returned: boolean;
+  nda_reaffirmed: boolean;
+  notes?: string;
+  tasks: OffboardingTask[];
+  created_at: string;
+  completed_at?: string;
+}
+
+export interface OneOnOneMeeting {
+  id: string;
+  manager_id: string;
+  employee_id: string;
+  scheduled_date: string;
+  status: string;
+  talking_points: string[];
+  ai_suggested_prompts: string[];
+  manager_notes?: string;
+  action_items: string[];
+  created_at: string;
+}
+
+export interface CalibrationAnalysis {
+  id: string;
+  cycle_name: string;
+  department: string;
+  total_reviewed: number;
+  rating_distribution: Record<string, number>;
+  mean_rating: number;
+  detected_biases: string[];
+  recommendations: string[];
+  analyzed_at: string;
+}

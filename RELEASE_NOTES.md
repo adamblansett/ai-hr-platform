@@ -1,3 +1,45 @@
+# Release v1.6.0 — `ai-hr-platform`
+
+**Release Date:** November 22, 2026  
+**License:** Apache 2.0  
+**Status:** Production Ready  
+
+Version 1.6.0 expands the platform with an automated employee offboarding & de-provisioning engine, an interactive visual organization chart & span-of-control analytics suite, and an AI-driven 1:1 coaching & performance calibration assistant.
+
+---
+
+## 🌟 What's New in v1.6.0
+
+### 1. Automated Employee Offboarding & Asset Reclamation Lifecycle
+- **End-to-End Offboarding Protocol (`/api/v1/offboarding`):**
+  - Manages departure checklists across IT, Finance, HR, and Security domains.
+  - Generates automated shipping return tasks for laptops and hardware with wipe certification tracking.
+  - Final paystub and accrued PTO payout tracking.
+- **SCIM 2.0 Automated Deprovisioning (`POST /api/v1/offboarding/{id}/deprovision-scim`):**
+  - Instant one-click or scheduled account suspension across corporate IdPs (Okta, Microsoft Entra ID, Google Workspace, GitHub Enterprise).
+- **Exit Interview AI Synthesis:**
+  - Automated sentiment scoring and retention root-cause analysis (e.g. compensation, career trajectory, manager relationship).
+- **Offboarding Dashboard (`OffboardingView.tsx`):**
+  - Web view for people managers and HR administrators to monitor departure workflows and task completion.
+
+### 2. Interactive Enterprise Org Chart & Hierarchy Analytics
+- **Visual Reporting Tree (`OrgChartView.tsx`):**
+  - Canvas-style recursive hierarchy visualizer rendering executive nodes down to individual contributors with drill-down collapse/expand controls.
+- **Span-of-Control Analytics (`GET /api/v1/employees/org-chart/stats`):**
+  - Real-time computation of average direct reports per manager and overloaded manager alerts (>8 direct reports threshold).
+
+### 3. AI Autonomous 1:1 Coaching & Performance Calibration
+- **1:1 Coaching Co-Pilot (`/api/v1/coaching/1on1`):**
+  - Generates meeting agendas dynamically grounded in the direct report's active OKRs, recent project milestones, and blockers.
+  - Generates tailored coaching prompts for managers based on strategic focus areas (`CAREER_GROWTH`, `PERFORMANCE_INTERVENTION`, `GENERAL_PROGRESS`).
+- **Performance Calibration & Bias Detector (`/api/v1/coaching/calibration`):**
+  - Statistical analysis of departmental rating distributions.
+  - Automatically identifies and flags **Central Tendency Bias** (clustering at rating 3), **Leniency Bias** (skewed upper distribution), and **Harshness Bias** (skewed lower distribution).
+- **Coaching & Calibration Dashboard (`CoachingCalibrationView.tsx`):**
+  - Dual-mode interface supporting manager check-in agendas and executive calibration audits.
+
+---
+
 # Release v1.5.0 — `ai-hr-platform`
 
 **Release Date:** November 18, 2026  

@@ -15,6 +15,8 @@ from backend.app.api.v1.endpoints.localization import router as localization_rou
 from backend.app.api.v1.endpoints.succession import router as succession_router
 from backend.app.api.v1.endpoints.compliance import router as compliance_router
 from backend.app.api.v1.endpoints.outbound_webhooks import router as outbound_webhooks_router
+from backend.app.api.v1.endpoints.offboarding import router as offboarding_router
+from backend.app.api.v1.endpoints.coaching import router as coaching_router
 
 api_router = APIRouter()
 
@@ -34,3 +36,5 @@ api_router.include_router(localization_router, prefix="/localization", tags=["Mu
 api_router.include_router(succession_router, prefix="/succession", tags=["Succession & Career Mobility"])
 api_router.include_router(compliance_router, prefix="/compliance", tags=["Compliance & Data Governance (GDPR / SOC 2)"])
 api_router.include_router(outbound_webhooks_router, prefix="/webhooks/outbound", tags=["Outbound Webhook Dispatcher (Workday/ADP/Gusto)"])
+api_router.include_router(offboarding_router, prefix="/offboarding", tags=["Employee Lifecycle & Offboarding"])
+api_router.include_router(coaching_router, prefix="/coaching", tags=["AI 1:1 Coaching & Performance Calibration"])

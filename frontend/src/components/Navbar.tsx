@@ -11,12 +11,14 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, user, onLogout }) => {
   const navItems = [
     { id: 'dashboard', label: 'Dashboard' },
-    { id: 'onboarding', label: 'Onboarding' },
+    { id: 'orgchart', label: 'Org Chart' },
     { id: 'directory', label: 'Directory' },
-    { id: 'policies', label: 'Policy AI Assistant' },
+    { id: 'onboarding', label: 'Onboarding' },
+    { id: 'offboarding', label: 'Offboarding' },
+    { id: 'policies', label: 'Policy AI' },
     { id: 'leave', label: 'Leave & PTO' },
     { id: 'compensation', label: 'Compensation & Equity' },
-    { id: 'localization', label: 'Global & Holidays' },
+    { id: 'coaching', label: '1:1 Coaching & Calibration' },
     { id: 'compliance', label: 'Compliance & Audit' },
     { id: 'integrations', label: 'Integrations & Webhooks' },
   ];
