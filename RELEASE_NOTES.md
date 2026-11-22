@@ -1,3 +1,55 @@
+# Release v1.8.0 — `ai-hr-platform`
+
+**Release Date:** November 22, 2026  
+**License:** Apache 2.0  
+**Status:** Production Ready  
+
+Version 1.8.0 introduces an AI-powered expense reimbursement engine with automated receipt policy auditing, an enterprise workplace health and safety incident tracker with OSHA 300 / 300A compliance logs and AI root-cause analysis, and an employee rewards, peer kudos, and milestone celebration engine.
+
+---
+
+## 🌟 What's New in v1.8.0
+
+### 1. AI Expense Reimbursement & OCR Policy Auditor
+- **Multi-Category Expense Reporting (`/api/v1/expenses`):**
+  - Itemized submission across `MEALS`, `TRAVEL`, `LODGING`, `SOFTWARE`, `OFFICE_SUPPLIES`, and `OTHER`.
+- **Autonomous Policy Compliance Auditor (`POST /api/v1/expenses/{id}/audit`):**
+  - Flags per-diem violations (e.g. meal expenses > $75.00 limit, lodging > $300.00).
+  - Enforces mandatory itemized receipt attachments for any item exceeding $25.00.
+  - Automatically flags alcohol-related purchases for corporate entertainment policy compliance.
+  - Identifies non-working weekend expense dates requiring pre-authorization justifications.
+- **Automated Reimbursement Payouts:**
+  - One-click manager approval workflow generating traceable ACH reimbursement reference codes (e.g. `REIMB-YYYYMMDD-XXXXXX`).
+- **Interactive Expense Portal (`ExpenseAuditView.tsx`):**
+  - Visual policy inspection breakdown, total outlay metrics, compliance pass rate KPI, and new expense report filing modal.
+
+### 2. Workplace Health, Safety & OSHA Incident Compliance Tracker
+- **OSHA 29 CFR Part 1904 Compliance Engine (`/api/v1/safety`):**
+  - Automatic evaluation of OSHA recordability based on medical treatment beyond first aid, restricted duty, or days away from work.
+  - Automatic generation of sequential OSHA case numbers (e.g. `OSHA-2026-XXXX`).
+- **Automated OSHA Form 300 / 300A Log Computation:**
+  - Aggregates annual injury, illness, and near-miss case counts.
+  - Computes standard Lost Workday Rate (LWDR) per 200,000 labor hours (100 FTE baseline).
+- **AI 5-Whys Root Cause Analysis & Mitigation Plans:**
+  - Synthesizes incident narratives and locations into environmental/procedural root causes with targeted engineering controls.
+- **Safety Incident Portal (`SafetyComplianceView.tsx`):**
+  - Live incident register, OSHA recordable badges, and deep root-cause inspection modal.
+
+### 3. Employee Rewards, Peer Kudos & Milestone Celebration Engine
+- **Peer Recognition & Micro-Bonus Feed (`/api/v1/recognition/feed`):**
+  - Colleague recognition feed tied directly to corporate core values (`CUSTOMER_OBSESSION`, `BIAS_FOR_ACTION`, `INNOVATION_EXCELLENCE`, `DELIVER_RESULTS`, `OWNERSHIP`).
+- **Discretionary Point Wallets & Allowance Management:**
+  - Monthly giving allowance (default 200 pts/month) prevents point inflation; redeemable point wallets for received peer appreciation.
+- **Rewards Catalog & Instant Claim Redemption (`/api/v1/recognition/rewards`):**
+  - Built-in reward tiers (digital gift cards, noise-cancelling headphones, branded company fleece kits, and extra paid wellness days off).
+  - Validation of point balance and generation of unique redemption claim codes (`RWD-XXXXXXXX`).
+- **Automated Milestone Detection:**
+  - Tracking and celebration feed for employee work anniversaries and birthdays with automated bonus point allocations.
+- **Recognition Portal (`RewardsRecognitionView.tsx`):**
+  - Interactive kudos composer, real-time activity stream, and instant catalog redemption shop.
+
+---
+
 # Release v1.7.0 — `ai-hr-platform`
 
 **Release Date:** November 22, 2026  

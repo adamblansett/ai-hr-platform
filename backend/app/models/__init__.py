@@ -43,6 +43,26 @@ from backend.app.models.benefits import (
 from backend.app.models.attendance import (
     TimeSheetEntry,
 )
+from backend.app.models.expenses import (
+    ExpenseReport,
+    ExpenseItem,
+    ExpenseCategory,
+    ExpenseStatus,
+    AuditStatus,
+)
+from backend.app.models.safety import (
+    SafetyIncident,
+    IncidentType,
+    IncidentSeverity,
+    IncidentStatus,
+)
+from backend.app.models.recognition import (
+    PeerRecognition,
+    RewardCatalogItem,
+    EmployeeRecognitionWallet,
+    CoreValue,
+    MilestoneType,
+)
 
 __all__ = [
     "Base",
@@ -91,4 +111,18 @@ __all__ = [
     "BenefitPlan",
     "EmployeeBenefitElection",
     "TimeSheetEntry",
+    "ExpenseReport",
+    "ExpenseItem",
+    "ExpenseCategory",
+    "ExpenseStatus",
+    "AuditStatus",
+    "SafetyIncident",
+    "IncidentType",
+    "IncidentSeverity",
+    "IncidentStatus",
+    "PeerRecognition",
+    "RewardCatalogItem",
+    "EmployeeRecognitionWallet",
+    "CoreValue",
+    "MilestoneType",
 ]

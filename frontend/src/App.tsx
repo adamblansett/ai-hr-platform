@@ -14,6 +14,9 @@ import { CoachingCalibrationView } from './components/CoachingCalibrationView';
 import { PulseSentimentView } from './components/PulseSentimentView';
 import { BenefitsEnrollmentView } from './components/BenefitsEnrollmentView';
 import { TimeAttendanceView } from './components/TimeAttendanceView';
+import { ExpenseAuditView } from './components/ExpenseAuditView';
+import { SafetyComplianceView } from './components/SafetyComplianceView';
+import { RewardsRecognitionView } from './components/RewardsRecognitionView';
 import { Employee } from './types';
 import { api } from './services/api';
 
@@ -131,6 +134,9 @@ export const App: React.FC = () => {
         {activeTab === 'onboarding' && <OnboardingView />}
         {activeTab === 'offboarding' && <OffboardingView />}
         {activeTab === 'attendance' && <TimeAttendanceView />}
+        {activeTab === 'expenses' && <ExpenseAuditView />}
+        {activeTab === 'safety' && <SafetyComplianceView />}
+        {activeTab === 'recognition' && <RewardsRecognitionView />}
         {activeTab === 'leave' && <LeaveManagementView />}
         {activeTab === 'compensation' && <CompensationView />}
         {activeTab === 'benefits' && <BenefitsEnrollmentView />}

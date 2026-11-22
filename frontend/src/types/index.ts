@@ -379,3 +379,112 @@ export interface AttendanceSummary {
   meal_penalty_violations: number;
   estimated_payable_hours: number;
 }
+
+// v1.8.0 Interfaces
+
+export interface ExpenseItem {
+  id: string;
+  report_id: string;
+  category: string;
+  amount: number;
+  currency: string;
+  expense_date: string;
+  merchant: string;
+  description?: string;
+  receipt_url?: string;
+  is_compliant: boolean;
+  policy_flags?: string;
+}
+
+export interface ExpenseReport {
+  id: string;
+  employee_id: string;
+  title: string;
+  status: string;
+  total_amount: number;
+  currency: string;
+  audit_status: string;
+  audit_notes?: string;
+  reimbursement_reference?: string;
+  created_at: string;
+  submitted_at?: string;
+  approved_at?: string;
+  items: ExpenseItem[];
+}
+
+export interface ExpenseAuditResult {
+  report_id: string;
+  overall_status: string;
+  total_audited: number;
+  flagged_items_count: number;
+  flags: string[];
+  remediation_actions: string[];
+}
+
+export interface SafetyIncident {
+  id: string;
+  employee_id: string;
+  incident_type: string;
+  severity: string;
+  incident_date: string;
+  location: string;
+  description: string;
+  is_osha_recordable: boolean;
+  osha_case_number?: string;
+  lost_workday_count: number;
+  restricted_days_count: number;
+  ai_root_cause_analysis?: string;
+  corrective_actions?: string;
+  status: string;
+  created_at: string;
+}
+
+export interface OSHA300LogSummary {
+  year: number;
+  total_incidents: number;
+  osha_recordable_cases: number;
+  total_lost_workdays: number;
+  total_restricted_days: number;
+  injuries_count: number;
+  illnesses_count: number;
+  near_misses_count: number;
+  lost_workday_rate: number;
+}
+
+export interface PeerRecognition {
+  id: string;
+  sender_id: string;
+  recipient_id: string;
+  points: number;
+  core_value: string;
+  message: string;
+  is_public: boolean;
+  created_at: string;
+}
+
+export interface RewardCatalogItem {
+  id: string;
+  title: string;
+  category: string;
+  points_cost: number;
+  description: string;
+  is_available: boolean;
+  image_url?: string;
+}
+
+export interface EmployeeWallet {
+  employee_id: string;
+  points_balance: number;
+  monthly_allowance_remaining: number;
+  updated_at: string;
+}
+
+export interface MilestoneEvent {
+  employee_id: string;
+  employee_name: string;
+  milestone_type: string;
+  milestone_date: string;
+  anniversary_years?: number;
+  suggested_award_points: number;
+}
+

@@ -26,6 +26,14 @@ import {
   BenefitsAdvisorResult,
   TimeSheetEntry,
   AttendanceSummary,
+  ExpenseReport,
+  ExpenseAuditResult,
+  SafetyIncident,
+  OSHA300LogSummary,
+  PeerRecognition,
+  RewardCatalogItem,
+  EmployeeWallet,
+  MilestoneEvent,
 } from '../types';
 
 const API_BASE = '/api/v1';
@@ -335,6 +343,85 @@ class ApiClient {
 
   async getAttendanceSummary(employeeId: string): Promise<AttendanceSummary> {
     return this.request<AttendanceSummary>(`/attendance/summary/${employeeId}`);
+  }
+
+  // Expense Reports & Policy Audit
+  async getExpenseReports(employeeId?: string): Promise<ExpenseReport[]> {
+    const q = employeeId ? `?employee_id=${employeeId}` : '';
+    return this.request<ExpenseReport[]>(`/expenses/${q}`);
+  }
+
+  async createExpenseReport(data: any): Promise<ExpenseReport> {
+    return this.request<ExpenseReport>('/expenses/', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async auditExpenseReport(reportId: string): Promise<ExpenseAuditResult> {
+    return this.request<ExpenseAuditResult>(`/expenses/${reportId}/audit`, {
+      method: 'POST',
+    });
+  }
+
+  async submitExpenseReport(reportId: string): Promise<ExpenseReport> {
+    return this.request<ExpenseReport>(`/expenses/${reportId}/submit`, {
+      method: 'POST',
+    });
+  }
+
+  async approveExpenseReport(reportId: string): Promise<ExpenseReport> {
+    return this.request<ExpenseReport>(`/expenses/${reportId}/approve`, {
+      method: 'POST',
+    });
+  }
+
+  // Workplace Health, Safety & OSHA Compliance
+  async getSafetyIncidents(employeeId?: string): Promise<SafetyIncident[]> {
+    const q = employeeId ? `?employee_id=${employeeId}` : '';
+    return this.request<SafetyIncident[]>(`/safety/incidents${q}`);
+  }
+
+  async reportSafetyIncident(data: any): Promise<SafetyIncident> {
+    return this.request<SafetyIncident>('/safety/incidents', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getOsha300Log(year: number = 2026): Promise<OSHA300LogSummary> {
+    return this.request<OSHA300LogSummary>(`/safety/osha-300-log?year=${year}`);
+  }
+
+  // Employee Engagement & Peer Recognition
+  async getRecognitionFeed(): Promise<PeerRecognition[]> {
+    return this.request<PeerRecognition[]>('/recognition/feed');
+  }
+
+  async sendPeerKudos(data: { sender_id: string; recipient_id: string; points: number; core_value: string; message: string }): Promise<PeerRecognition> {
+    return this.request<PeerRecognition>('/recognition/kudos', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getEmployeeWallet(employeeId: string): Promise<EmployeeWallet> {
+    return this.request<EmployeeWallet>(`/recognition/wallet/${employeeId}`);
+  }
+
+  async getRewardsCatalog(): Promise<RewardCatalogItem[]> {
+    return this.request<RewardCatalogItem[]>('/recognition/rewards');
+  }
+
+  async redeemReward(data: { employee_id: string; reward_item_id: string }): Promise<any> {
+    return this.request('/recognition/redeem', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getUpcomingMilestones(): Promise<MilestoneEvent[]> {
+    return this.request<MilestoneEvent[]>('/recognition/milestones');
   }
 }
 

@@ -20,6 +20,9 @@ from backend.app.api.v1.endpoints.coaching import router as coaching_router
 from backend.app.api.v1.endpoints.pulse import router as pulse_router
 from backend.app.api.v1.endpoints.benefits import router as benefits_router
 from backend.app.api.v1.endpoints.attendance import router as attendance_router
+from backend.app.api.v1.endpoints.expenses import router as expenses_router
+from backend.app.api.v1.endpoints.safety import router as safety_router
+from backend.app.api.v1.endpoints.recognition import router as recognition_router
 
 api_router = APIRouter()
 
@@ -44,3 +47,6 @@ api_router.include_router(coaching_router, prefix="/coaching", tags=["AI 1:1 Coa
 api_router.include_router(pulse_router, prefix="/pulse", tags=["Employee Pulse & Sentiment Radar"])
 api_router.include_router(benefits_router, prefix="/benefits", tags=["Benefits Administration & AI Advisor"])
 api_router.include_router(attendance_router, prefix="/attendance", tags=["Time & Attendance Tracking (Overtime / FLSA)"])
+api_router.include_router(expenses_router, prefix="/expenses", tags=["Expense Reimbursement & Policy Audit"])
+api_router.include_router(safety_router, prefix="/safety", tags=["Workplace Health, Safety & OSHA Incident Tracking"])
+api_router.include_router(recognition_router, prefix="/recognition", tags=["Employee Engagement & Peer Recognition"])
