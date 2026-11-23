@@ -45,6 +45,7 @@ jobs:
 
       - name: Run Backend Tests
         env:
+          PYTHONPATH: .
           DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/ai_hr_db
           SECRET_KEY: test-secret-key-32-chars-long-minimum!
         run: |

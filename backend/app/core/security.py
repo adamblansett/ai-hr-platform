@@ -27,7 +27,7 @@ def create_access_token(
     
     to_encode: Dict[str, Any] = {
         "exp": expire,
-        "nbf": now,
+        "nbf": now - timedelta(seconds=10),  # Leeway buffer prevents clock skew rejection
         "iat": now,
         "jti": uuid.uuid4().hex,
         "sub": str(subject),
@@ -52,7 +52,7 @@ def create_refresh_token(
     
     to_encode: Dict[str, Any] = {
         "exp": expire,
-        "nbf": now,
+        "nbf": now - timedelta(seconds=10),  # Leeway buffer prevents clock skew rejection
         "iat": now,
         "jti": uuid.uuid4().hex,
         "sub": str(subject),
