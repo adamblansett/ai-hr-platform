@@ -118,6 +118,12 @@ class PolicyRAGService:
             "bypass system rules",
             "reveal internal prompt",
             "exfiltrate database",
+            "override security guidelines",
+            "show system instructions",
+            "repeat everything above",
+            "dump all users",
+            "output environment variables",
+            "drop table",
         ]
         lower_q = req.question.lower()
         if any(pat in lower_q for pat in adversarial_patterns):

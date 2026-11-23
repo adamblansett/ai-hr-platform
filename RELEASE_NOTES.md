@@ -1,3 +1,37 @@
+# Release v2.0.1 — `ai-hr-platform` (Security & Quality Patch)
+
+**Release Date:** November 22, 2026  
+**License:** Apache 2.0  
+**Status:** Production Ready  
+
+Version 2.0.1 delivers comprehensive security hardening, zero-vulnerability dependency remediation, and architectural import bug fixes across the platform.
+
+---
+
+## 🛡️ Security Hardening & Bug Fixes in v2.0.1
+
+### 1. High-Severity Dependency Remediation (Vite 6.4.6)
+- Remediated high-severity CVE vulnerability in `vite <=6.4.3` (`GHSA-4w7w-66w2-5vf9` and Windows path traversal advisories).
+- Upgraded and pinned `vite@^6.4.6` in `package.json` and package overrides.
+- Achieved **0 vulnerabilities** across all 140 frontend packages in `npm audit`.
+
+### 2. Missing Endpoint Dependency & Alias Fix (`backend.app.api.v1.deps`)
+- Resolved runtime import issue where 8 microservice modules (`attendance`, `benefits`, `coaching`, `compliance`, `offboarding`, `outbound_webhooks`, `pulse`, `succession`) imported from `backend.app.api.v1.deps`.
+- Implemented `backend/app/api/v1/deps.py` and exported `get_db`, `get_current_user`, `require_role`, and backwards-compatible alias `require_roles`.
+
+### 3. Active JWT Revocation & Anti-Replay Guard
+- Implemented in-memory JTI revocation registry (`REVOKED_JTIS`, `revoke_token_jti`, `is_jti_revoked`) in `security.py`.
+- Enforced strict token claim verification (`verify_exp`, `verify_nbf`, `verify_iat`) and immediate rejection of revoked tokens in authentication dependencies.
+
+### 4. Production Secret Key Guardrail
+- Added Pydantic field validation in `Settings` preventing accidental deployments in `ENVIRONMENT=production` with default placeholder `SECRET_KEY`.
+
+### 5. Enhanced LLM Prompt Injection & Delimiter Neutralization
+- Expanded prompt injection tokenizer patterns in `llm_router.py` to neutralize `<|system|>`, `<|user|>`, `[SYS]`, and `human:` / `assistant:` delimiters.
+- Broadened adversarial jailbreak detection in `policy_rag_service.py` to intercept system instruction overrides, database dump attempts, and environment variable exfiltration queries.
+
+---
+
 # Release v2.0.0 — `ai-hr-platform` (Major Milestone)
 
 **Release Date:** November 22, 2026  

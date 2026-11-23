@@ -5,7 +5,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from backend.app.core.database import AsyncSessionLocal
-from backend.app.core.security import decode_token
+from backend.app.core.security import decode_token, is_jti_revoked
 from backend.app.models.employee import Employee, EmployeeRole, EmploymentStatus
 from backend.app.schemas.auth import TokenPayload
 
@@ -39,6 +39,14 @@ async def get_current_user(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token type, expected access token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    jti = payload.get("jti")
+    if jti and is_jti_revoked(jti):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token has been revoked",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
@@ -91,3 +99,7 @@ def require_role(allowed_roles: List[EmployeeRole]) -> Callable[[Employee], Empl
             )
         return current_user
     return role_checker
+
+# Backwards compatibility alias
+require_roles = require_role
+

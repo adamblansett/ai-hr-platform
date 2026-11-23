@@ -63,9 +63,27 @@ def create_refresh_token(
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt
 
+REVOKED_JTIS: set[str] = set()
+
+def revoke_token_jti(jti: str) -> None:
+    """Revoke a specific JWT jti (token ID) on logout or security intervention."""
+    REVOKED_JTIS.add(jti)
+
+def is_jti_revoked(jti: str) -> bool:
+    """Check if a JWT has been revoked."""
+    return jti in REVOKED_JTIS
+
 def decode_token(token: str) -> Optional[Dict[str, Any]]:
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        payload = jwt.decode(
+            token,
+            settings.SECRET_KEY,
+            algorithms=[settings.ALGORITHM],
+            options={"verify_exp": True, "verify_nbf": True, "verify_iat": True}
+        )
+        jti = payload.get("jti")
+        if jti and is_jti_revoked(jti):
+            return None
         return payload
     except JWTError:
         return None

@@ -31,7 +31,11 @@ class LLMRouter:
         Defensive sanitization against prompt injection attacks.
         Neutralizes delimiters and system role hijack attempts.
         """
-        sanitized = re.sub(r"(?i)(system\s*:|assistant\s*:|\[INST\]|\[\/INST\]|<\|im_start\|>|<\|im_end\|>)", "[BLOCKED_TOKEN]", text)
+        sanitized = re.sub(
+            r"(?i)(system\s*:|assistant\s*:|human\s*:|\[INST\]|\[\/INST\]|\[SYS\]|<\|im_start\|>|<\|im_end\|>|<\|system\|>|<\|user\|>)",
+            "[BLOCKED_TOKEN]",
+            text,
+        )
         return sanitized
 
     async def complete(

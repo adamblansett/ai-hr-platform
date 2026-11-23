@@ -22,6 +22,14 @@ class Settings(BaseSettings):
     POSTGRES_PORT: int = 5432
     DATABASE_URL: Optional[str] = None
 
+    @field_validator("SECRET_KEY")
+    @classmethod
+    def validate_secret_key_production(cls, v: str, info) -> str:
+        env = info.data.get("ENVIRONMENT", "development")
+        if env == "production" and ("replace-this" in v or len(v) < 32):
+            raise ValueError("Insecure default SECRET_KEY detected in production environment! Must be 32+ char random key.")
+        return v
+
     @field_validator("DATABASE_URL", mode="before")
     @classmethod
     def assemble_db_connection(cls, v: Optional[str], info) -> str:
