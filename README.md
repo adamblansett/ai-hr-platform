@@ -8,7 +8,7 @@
 
 `ai-hr-platform` is an independently deployable open-source microservice engineered to automate enterprise employee lifecycle operations, compliance tracking, leave management, and AI-assisted employee support.
 
-It seamlessly integrates downstream with [`ai-recruiter`](https://github.com/example/ai-recruiter) upon candidate offer acceptance, provisioning employee onboarding workflows and serving as the intelligent system of record for employee operations.
+It seamlessly integrates downstream with [`ai-recruiter`](https://github.com/adamblansett/ai-recruiter) upon candidate offer acceptance, provisioning employee onboarding workflows and serving as the intelligent system of record for employee operations.
 
 ---
 
@@ -104,7 +104,7 @@ ai-hr-platform/
 
 ### 1. Clone & Setup Environment
 ```bash
-git clone https://github.com/example/ai-hr-platform.git
+git clone https://github.com/adamblansett/ai-hr-platform.git
 cd ai-hr-platform
 cp docker/.env.example docker/.env
 ```
