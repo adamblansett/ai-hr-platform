@@ -4,7 +4,7 @@ from datetime import date
 from typing import List, Optional
 from sqlalchemy import String, Date, Float, Enum, ForeignKey, Text, Boolean, JSON
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship as sa_relationship
 from backend.app.models.base import Base, UUIDPrimaryKeyMixin, TimestampMixin
 
 class CycleStatus(str, enum.Enum):
@@ -41,8 +41,8 @@ class PerformanceCycle(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     rubric_config: Mapped[dict] = mapped_column(JSON, default=dict, nullable=False)
 
     # Relationships
-    goals: Mapped[List["GoalOKR"]] = relationship("GoalOKR", back_populates="cycle", cascade="all, delete-orphan")
-    reviews: Mapped[List["ReviewFeedback"]] = relationship(
+    goals: Mapped[List["GoalOKR"]] = sa_relationship("GoalOKR", back_populates="cycle", cascade="all, delete-orphan")
+    reviews: Mapped[List["ReviewFeedback"]] = sa_relationship(
         "ReviewFeedback", back_populates="cycle", cascade="all, delete-orphan"
     )
 
@@ -68,8 +68,8 @@ class GoalOKR(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     )
 
     # Relationships
-    cycle: Mapped["PerformanceCycle"] = relationship("PerformanceCycle", back_populates="goals")
-    employee: Mapped["Employee"] = relationship("Employee")
+    cycle: Mapped["PerformanceCycle"] = sa_relationship("PerformanceCycle", back_populates="goals")
+    employee: Mapped["Employee"] = sa_relationship("Employee")
 
 class ReviewFeedback(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     __tablename__ = "review_feedbacks"
@@ -96,6 +96,6 @@ class ReviewFeedback(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     is_submitted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     # Relationships
-    cycle: Mapped["PerformanceCycle"] = relationship("PerformanceCycle", back_populates="reviews")
-    reviewee: Mapped["Employee"] = relationship("Employee", foreign_keys=[reviewee_id])
-    reviewer: Mapped["Employee"] = relationship("Employee", foreign_keys=[reviewer_id])
+    cycle: Mapped["PerformanceCycle"] = sa_relationship("PerformanceCycle", back_populates="reviews")
+    reviewee: Mapped["Employee"] = sa_relationship("Employee", foreign_keys=[reviewee_id])
+    reviewer: Mapped["Employee"] = sa_relationship("Employee", foreign_keys=[reviewer_id])
