@@ -9,7 +9,7 @@ from backend.app.models.employee import Employee
 from backend.app.models.onboarding import OnboardingTask
 from backend.app.models.leave import LeaveRequest, LeaveBalance
 from backend.app.models.policy import PolicyAcknowledgment
-from backend.app.models.performance import GoalOKR, ReviewSubmission
+from backend.app.models.performance import GoalOKR, ReviewFeedback
 from backend.app.models.compensation import CompensationPackage, PaystubRecord, EquityGrant
 from backend.app.models.audit import AuditLog
 
