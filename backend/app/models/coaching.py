@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime, timezone, date
 from sqlalchemy import Column, String, DateTime, Date, ForeignKey, Boolean, JSON, Integer, Float, Text
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 from backend.app.core.database import Base
 
@@ -9,9 +10,9 @@ class OneOnOneMeeting(Base):
     __tablename__ = "one_on_one_meetings"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    organization_id = Column(String(36), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True)
-    manager_id = Column(String(36), ForeignKey("employees.id", ondelete="CASCADE"), nullable=False, index=True)
-    employee_id = Column(String(36), ForeignKey("employees.id", ondelete="CASCADE"), nullable=False, index=True)
+    organization_id = Column(PG_UUID(as_uuid=True), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True)
+    manager_id = Column(PG_UUID(as_uuid=True), ForeignKey("employees.id", ondelete="CASCADE"), nullable=False, index=True)
+    employee_id = Column(PG_UUID(as_uuid=True), ForeignKey("employees.id", ondelete="CASCADE"), nullable=False, index=True)
     
     scheduled_date = Column(Date, nullable=False)
     status = Column(String(20), default="SCHEDULED") # SCHEDULED, COMPLETED, CANCELLED
@@ -29,7 +30,7 @@ class CalibrationSession(Base):
     __tablename__ = "calibration_sessions"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    organization_id = Column(String(36), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True)
+    organization_id = Column(PG_UUID(as_uuid=True), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True)
     
     cycle_name = Column(String(100), nullable=False)
     department = Column(String(100), nullable=False)

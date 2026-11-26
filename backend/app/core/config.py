@@ -57,6 +57,12 @@ class Settings(BaseSettings):
     # Upstream Integrations
     RECRUITER_WEBHOOK_SECRET: str = "dev-shared-recruiter-webhook-secret-key"
 
+    # Production Hardening: Rate Limiting & Structured Logging
+    RATE_LIMIT_ENABLED: bool = True
+    RATE_LIMIT_LOGIN_PER_MINUTE: int = 20
+    RATE_LIMIT_AI_PER_MINUTE: int = 30
+    LOG_LEVEL: str = "INFO"
+
     model_config = SettingsConfigDict(
         env_file=".env",
         case_sensitive=True,

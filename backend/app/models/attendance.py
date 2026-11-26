@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime, timezone, date
 from sqlalchemy import Column, String, DateTime, Date, ForeignKey, Boolean, Float, Integer, Text
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 from backend.app.core.database import Base
 
@@ -9,8 +10,8 @@ class TimeSheetEntry(Base):
     __tablename__ = "timesheet_entries"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    organization_id = Column(String(36), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True)
-    employee_id = Column(String(36), ForeignKey("employees.id", ondelete="CASCADE"), nullable=False, index=True)
+    organization_id = Column(PG_UUID(as_uuid=True), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True)
+    employee_id = Column(PG_UUID(as_uuid=True), ForeignKey("employees.id", ondelete="CASCADE"), nullable=False, index=True)
     
     shift_date = Column(Date, nullable=False, default=lambda: datetime.now(timezone.utc).date())
     clock_in = Column(DateTime(timezone=True), nullable=False)

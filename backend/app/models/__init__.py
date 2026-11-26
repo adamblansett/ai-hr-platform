@@ -100,6 +100,23 @@ from backend.app.models.tenant_branding import (
     TenantBrandingConfig,
     SSLCertStatus,
 )
+from backend.app.models.sso_mfa import (
+    SSOProviderConfig,
+    UserMFASetting,
+    SSOProviderType,
+)
+from backend.app.models.notifications import (
+    NotificationDispatch,
+    NotificationChannel,
+    NotificationCategory,
+    NotificationStatus,
+)
+from backend.app.models.workforce_planning import (
+    WorkforcePlan,
+    HeadcountRequisitionForecast,
+    PlanStatus,
+    RecruiterSyncStatus,
+)
 
 __all__ = [
     "Base",
@@ -187,4 +204,15 @@ __all__ = [
     "DocumentType",
     "TenantBrandingConfig",
     "SSLCertStatus",
+    "SSOProviderConfig",
+    "UserMFASetting",
+    "SSOProviderType",
+    "NotificationDispatch",
+    "NotificationChannel",
+    "NotificationCategory",
+    "NotificationStatus",
+    "WorkforcePlan",
+    "HeadcountRequisitionForecast",
+    "PlanStatus",
+    "RecruiterSyncStatus",
 ]

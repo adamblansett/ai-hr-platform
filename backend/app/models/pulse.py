@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime, timezone
 from sqlalchemy import Column, String, DateTime, ForeignKey, Boolean, Integer, Float, JSON, Text
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 from backend.app.core.database import Base
 
@@ -9,7 +10,7 @@ class PulseSurvey(Base):
     __tablename__ = "pulse_surveys"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    organization_id = Column(String(36), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True)
+    organization_id = Column(PG_UUID(as_uuid=True), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True)
     
     title = Column(String(200), nullable=False)
     question = Column(String(500), nullable=False)
@@ -25,7 +26,7 @@ class PulseResponse(Base):
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     survey_id = Column(String(36), ForeignKey("pulse_surveys.id", ondelete="CASCADE"), nullable=False, index=True)
-    organization_id = Column(String(36), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True)
+    organization_id = Column(PG_UUID(as_uuid=True), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True)
     
     # Cryptographic respondent hash to prevent duplicate voting while preserving 100% anonymity
     respondent_hash = Column(String(64), nullable=False, index=True)
@@ -42,7 +43,7 @@ class DepartmentSentimentScore(Base):
     __tablename__ = "department_sentiment_scores"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    organization_id = Column(String(36), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True)
+    organization_id = Column(PG_UUID(as_uuid=True), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True)
     
     department = Column(String(100), nullable=False)
     period = Column(String(20), nullable=False) # e.g. "2026-W47"

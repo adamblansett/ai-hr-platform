@@ -294,6 +294,182 @@
               "path": ["health"]
             }
           }
+        },
+        {
+          "name": "Readiness Probe (Postgres & Redis)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8000/health/ready",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["health", "ready"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth Logout & Refresh",
+      "item": [
+        {
+          "name": "Refresh Access Token (Rotation)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"refresh_token\": \"{{refreshToken}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/auth/refresh", "host": ["{{baseUrl}}"], "path": ["auth", "refresh"] }
+          }
+        },
+        {
+          "name": "Logout (Revoke Tokens)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"refresh_token\": \"{{refreshToken}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/auth/logout", "host": ["{{baseUrl}}"], "path": ["auth", "logout"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Salary Benchmarking",
+      "item": [
+        {
+          "name": "List Salary Benchmarks",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/benchmarking/", "host": ["{{baseUrl}}"], "path": ["benchmarking", ""] }
+          }
+        },
+        {
+          "name": "Audit Department Compa-Ratio",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/benchmarking/audit/department?department=Engineering",
+              "host": ["{{baseUrl}}"],
+              "path": ["benchmarking", "audit", "department"],
+              "query": [{ "key": "department", "value": "Engineering" }]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Immigration & Relocation",
+      "item": [
+        {
+          "name": "List Immigration Cases",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/immigration/cases", "host": ["{{baseUrl}}"], "path": ["immigration", "cases"] }
+          }
+        },
+        {
+          "name": "Get Immigration Summary",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/immigration/summary", "host": ["{{baseUrl}}"], "path": ["immigration", "summary"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tenant Branding",
+      "item": [
+        {
+          "name": "Get Tenant Branding Config",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/branding/?organization_id=org-001",
+              "host": ["{{baseUrl}}"],
+              "path": ["branding", ""],
+              "query": [{ "key": "organization_id", "value": "org-001" }]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Enterprise SSO & MFA",
+      "item": [
+        {
+          "name": "List SSO Identity Providers",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/security/sso/providers", "host": ["{{baseUrl}}"], "path": ["security", "sso", "providers"] }
+          }
+        },
+        {
+          "name": "Initiate OIDC PKCE Authorization",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/security/sso/oidc/authorize", "host": ["{{baseUrl}}"], "path": ["security", "sso", "oidc", "authorize"] }
+          }
+        },
+        {
+          "name": "Setup TOTP MFA",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/security/mfa/setup?employee_id=emp-001", "host": ["{{baseUrl}}"], "path": ["security", "mfa", "setup"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notifications & Digests",
+      "item": [
+        {
+          "name": "List My Notifications",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/notifications/me", "host": ["{{baseUrl}}"], "path": ["notifications", "me"] }
+          }
+        },
+        {
+          "name": "Trigger Daily HR Digest",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/notifications/digest/trigger", "host": ["{{baseUrl}}"], "path": ["notifications", "digest", "trigger"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Workforce Planning",
+      "item": [
+        {
+          "name": "List Workforce Plans",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/workforce-planning/plans", "host": ["{{baseUrl}}"], "path": ["workforce-planning", "plans"] }
+          }
+        },
+        {
+          "name": "Simulate Headcount Scenario",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"scenario\": \"BASELINE\",\n  \"avg_base_salary\": 175000\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/workforce-planning/plans/wfp-eng-fy2027/simulate",
+              "host": ["{{baseUrl}}"],
+              "path": ["workforce-planning", "plans", "wfp-eng-fy2027", "simulate"]
+            }
+          }
+        },
+        {
+          "name": "Get Workforce Planning Summary",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/workforce-planning/summary", "host": ["{{baseUrl}}"], "path": ["workforce-planning", "summary"] }
+          }
         }
       ]
     }

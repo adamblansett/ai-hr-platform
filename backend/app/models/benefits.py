@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime, timezone, date
 from sqlalchemy import Column, String, DateTime, Date, ForeignKey, Boolean, Float, Text, JSON
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 from backend.app.core.database import Base
 
@@ -9,7 +10,7 @@ class BenefitPlan(Base):
     __tablename__ = "benefit_plans"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    organization_id = Column(String(36), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True)
+    organization_id = Column(PG_UUID(as_uuid=True), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True)
     
     plan_name = Column(String(150), nullable=False) # e.g. "Acme Anthem PPO Platinum 500"
     plan_type = Column(String(50), nullable=False) # MEDICAL, DENTAL, VISION, RETIREMENT_401K, HSA_FSA
@@ -31,8 +32,8 @@ class EmployeeBenefitElection(Base):
     __tablename__ = "employee_benefit_elections"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    organization_id = Column(String(36), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True)
-    employee_id = Column(String(36), ForeignKey("employees.id", ondelete="CASCADE"), nullable=False, index=True)
+    organization_id = Column(PG_UUID(as_uuid=True), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True)
+    employee_id = Column(PG_UUID(as_uuid=True), ForeignKey("employees.id", ondelete="CASCADE"), nullable=False, index=True)
     plan_id = Column(String(36), ForeignKey("benefit_plans.id", ondelete="CASCADE"), nullable=False, index=True)
     
     coverage_tier = Column(String(50), default="EMPLOYEE_ONLY") # EMPLOYEE_ONLY, EMPLOYEE_PLUS_SPOUSE, EMPLOYEE_PLUS_CHILDREN, FAMILY

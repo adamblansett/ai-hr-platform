@@ -713,4 +713,119 @@ export interface DomainVerificationResult {
   message: string;
 }
 
+export interface SSOProviderConfig {
+  id: string;
+  organization_id: string;
+  provider_type: 'SAML_2_0' | 'OIDC' | string;
+  provider_name: string;
+  issuer_url: string;
+  sso_login_url: string;
+  client_id?: string | null;
+  certificate_fingerprint?: string | null;
+  enforced_for_admins: boolean;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface OIDCAuthorizeResponse {
+  provider_id: string;
+  authorization_url: string;
+  state: string;
+  code_challenge: string;
+  code_challenge_method: string;
+}
+
+export interface MFASetupResponse {
+  employee_id: string;
+  secret: string;
+  otpauth_uri: string;
+  backup_codes: string[];
+  is_enabled: boolean;
+}
+
+export interface MFAStatusResponse {
+  employee_id: string;
+  is_enabled: boolean;
+  enforced_by_policy: boolean;
+  backup_codes_remaining: number;
+  last_verified_at?: string | null;
+}
+
+export interface NotificationItem {
+  id: string;
+  organization_id: string;
+  recipient_employee_id?: string | null;
+  channel: 'EMAIL' | 'SLACK' | 'TEAMS' | 'IN_APP' | string;
+  category: string;
+  title: string;
+  body: string;
+  status: 'QUEUED' | 'SENT' | 'FAILED' | 'READ' | string;
+  metadata_json: Record<string, any>;
+  sent_at?: string | null;
+  created_at: string;
+}
+
+export interface DigestSummary {
+  organization_id: string;
+  generated_at: string;
+  expiring_visas_count: number;
+  pending_leave_approvals_count: number;
+  overdue_compliance_courses_count: number;
+  upcoming_review_deadlines_count: number;
+  dispatched_channels: string[];
+  digest_preview: string;
+}
+
+export interface RequisitionForecast {
+  id: string;
+  plan_id: string;
+  organization_id: string;
+  role_title: string;
+  job_level: string;
+  target_quarter: string;
+  estimated_base_salary: number;
+  fully_loaded_cost: number;
+  recruiter_sync_status: string;
+  created_at: string;
+}
+
+export interface WorkforcePlan {
+  id: string;
+  organization_id: string;
+  fiscal_year: number;
+  department: string;
+  current_headcount: number;
+  target_headcount: number;
+  approved_budget_usd: number;
+  projected_attrition_rate: number;
+  status: string;
+  ai_rationale?: string | null;
+  created_at: string;
+  updated_at: string;
+  requisitions: RequisitionForecast[];
+}
+
+export interface ScenarioForecastResult {
+  plan_id: string;
+  department: string;
+  scenario: string;
+  net_new_hires: number;
+  attrition_backfills: number;
+  total_hiring_need: number;
+  projected_headcount_end: number;
+  estimated_total_fully_loaded_cost: number;
+  budget_variance_usd: number;
+  ai_recommendation: string;
+}
+
+export interface WorkforcePlanningSummary {
+  total_plans: number;
+  total_current_headcount: number;
+  total_target_headcount: number;
+  total_approved_budget_usd: number;
+  total_open_requisitions: number;
+  synced_to_recruiter_count: number;
+}
+
+
 

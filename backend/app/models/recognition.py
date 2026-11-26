@@ -1,7 +1,9 @@
+import uuid
 from datetime import datetime
 from enum import Enum
 from typing import Optional
 from sqlalchemy import String, DateTime, Integer, ForeignKey, Text, Boolean
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column
 from backend.app.core.database import Base
 
@@ -26,8 +28,8 @@ class PeerRecognition(Base):
     __tablename__ = "peer_recognitions"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
-    sender_id: Mapped[str] = mapped_column(String(36), ForeignKey("employees.id"), nullable=False)
-    recipient_id: Mapped[str] = mapped_column(String(36), ForeignKey("employees.id"), nullable=False)
+    sender_id: Mapped[uuid.UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey("employees.id", ondelete="CASCADE"), nullable=False)
+    recipient_id: Mapped[uuid.UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey("employees.id", ondelete="CASCADE"), nullable=False)
     points: Mapped[int] = mapped_column(Integer, default=50)
     core_value: Mapped[str] = mapped_column(String(50), default=CoreValue.CUSTOMER_OBSESSION.value)
     message: Mapped[str] = mapped_column(Text, nullable=False)
@@ -51,7 +53,7 @@ class EmployeeRecognitionWallet(Base):
     __tablename__ = "employee_recognition_wallets"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
-    employee_id: Mapped[str] = mapped_column(String(36), ForeignKey("employees.id"), unique=True, nullable=False)
+    employee_id: Mapped[uuid.UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey("employees.id", ondelete="CASCADE"), unique=True, nullable=False)
     points_balance: Mapped[int] = mapped_column(Integer, default=100)
     monthly_allowance_remaining: Mapped[int] = mapped_column(Integer, default=200)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

@@ -50,6 +50,16 @@ import {
   ImmigrationSummary,
   TenantBrandingConfig,
   DomainVerificationResult,
+  SSOProviderConfig,
+  OIDCAuthorizeResponse,
+  MFASetupResponse,
+  MFAStatusResponse,
+  NotificationItem,
+  DigestSummary,
+  WorkforcePlan,
+  RequisitionForecast,
+  ScenarioForecastResult,
+  WorkforcePlanningSummary,
 } from '../types';
 
 const API_BASE = '/api/v1';
@@ -100,7 +110,42 @@ class ApiClient {
       body: JSON.stringify({ email, password }),
     });
     this.setToken(res.access_token);
+    if (res.refresh_token) {
+      localStorage.setItem('ai_hr_refresh_token', res.refresh_token);
+    }
     return res;
+  }
+
+  async refreshToken() {
+    const refresh = localStorage.getItem('ai_hr_refresh_token');
+    if (!refresh) {
+      throw new Error('No refresh token available');
+    }
+    const res = await this.request<{ access_token: string; refresh_token: string }>('/auth/refresh', {
+      method: 'POST',
+      body: JSON.stringify({ refresh_token: refresh }),
+    });
+    this.setToken(res.access_token);
+    localStorage.setItem('ai_hr_refresh_token', res.refresh_token);
+    return res;
+  }
+
+  async logout() {
+    const refresh = localStorage.getItem('ai_hr_refresh_token');
+    try {
+      if (this.getToken()) {
+        await this.request('/auth/logout', {
+          method: 'POST',
+          body: JSON.stringify({ refresh_token: refresh }),
+        });
+      }
+    } catch {
+      // Clear local session regardless of server response
+    } finally {
+      this.token = null;
+      localStorage.removeItem('ai_hr_token');
+      localStorage.removeItem('ai_hr_refresh_token');
+    }
   }
 
   async getMe(): Promise<Employee> {
@@ -626,6 +671,141 @@ class ApiClient {
     return this.request<DomainVerificationResult>(`/branding/verify-domain?organization_id=${organizationId}`, {
       method: 'POST',
     });
+  }
+
+  // Enterprise SSO & TOTP MFA
+  async getSSOProviders(): Promise<SSOProviderConfig[]> {
+    return this.request<SSOProviderConfig[]>('/security/sso/providers');
+  }
+
+  async createSSOProvider(data: {
+    provider_type: string;
+    provider_name: string;
+    issuer_url: string;
+    sso_login_url: string;
+    client_id?: string;
+    certificate_fingerprint?: string;
+    enforced_for_admins?: boolean;
+  }): Promise<SSOProviderConfig> {
+    return this.request<SSOProviderConfig>('/security/sso/providers', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async initiateOIDCAuthorize(providerId?: string): Promise<OIDCAuthorizeResponse> {
+    const q = providerId ? `?provider_id=${encodeURIComponent(providerId)}` : '';
+    return this.request<OIDCAuthorizeResponse>(`/security/sso/oidc/authorize${q}`);
+  }
+
+  async getMFAStatus(employeeId: string = 'emp-001'): Promise<MFAStatusResponse> {
+    return this.request<MFAStatusResponse>(`/security/mfa/status?employee_id=${encodeURIComponent(employeeId)}`);
+  }
+
+  async setupMFA(employeeId: string = 'emp-001', email: string = 'elena.rostova@acme.corp'): Promise<MFASetupResponse> {
+    return this.request<MFASetupResponse>(
+      `/security/mfa/setup?employee_id=${encodeURIComponent(employeeId)}&email=${encodeURIComponent(email)}`,
+      { method: 'POST' }
+    );
+  }
+
+  async verifyMFA(employeeId: string, code: string): Promise<MFAStatusResponse> {
+    return this.request<MFAStatusResponse>('/security/mfa/verify', {
+      method: 'POST',
+      body: JSON.stringify({ employee_id: employeeId, code }),
+    });
+  }
+
+  async disableMFA(employeeId: string = 'emp-001'): Promise<MFAStatusResponse> {
+    return this.request<MFAStatusResponse>(`/security/mfa/disable?employee_id=${encodeURIComponent(employeeId)}`, {
+      method: 'POST',
+    });
+  }
+
+  // Notifications & Digests
+  async getNotifications(recipientId: string = 'emp-001', unreadOnly = false): Promise<NotificationItem[]> {
+    return this.request<NotificationItem[]>(
+      `/notifications/me?recipient_id=${encodeURIComponent(recipientId)}&unread_only=${unreadOnly}`
+    );
+  }
+
+  async getUnreadNotificationCount(recipientId: string = 'emp-001'): Promise<{ unread_count: number }> {
+    return this.request<{ unread_count: number }>(
+      `/notifications/unread-count?recipient_id=${encodeURIComponent(recipientId)}`
+    );
+  }
+
+  async markNotificationRead(notificationId: string): Promise<NotificationItem> {
+    return this.request<NotificationItem>(`/notifications/${notificationId}/read`, { method: 'PATCH' });
+  }
+
+  async dispatchNotification(data: {
+    recipient_employee_id?: string;
+    channel: string;
+    category: string;
+    title: string;
+    body: string;
+  }): Promise<NotificationItem> {
+    return this.request<NotificationItem>('/notifications/dispatch', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async triggerDailyDigest(organizationId: string = 'org-001'): Promise<DigestSummary> {
+    return this.request<DigestSummary>(`/notifications/digest/trigger?organization_id=${encodeURIComponent(organizationId)}`, {
+      method: 'POST',
+    });
+  }
+
+  // AI Workforce Planning & Headcount Forecasting
+  async getWorkforcePlans(): Promise<WorkforcePlan[]> {
+    return this.request<WorkforcePlan[]>('/workforce-planning/plans');
+  }
+
+  async createWorkforcePlan(data: {
+    fiscal_year: number;
+    department: string;
+    current_headcount: number;
+    target_headcount: number;
+    approved_budget_usd: number;
+    projected_attrition_rate: number;
+  }): Promise<WorkforcePlan> {
+    return this.request<WorkforcePlan>('/workforce-planning/plans', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async simulateWorkforcePlan(
+    planId: string,
+    scenario: 'CONSERVATIVE' | 'BASELINE' | 'HYPERGROWTH',
+    avgBaseSalary: number
+  ): Promise<ScenarioForecastResult> {
+    return this.request<ScenarioForecastResult>(`/workforce-planning/plans/${planId}/simulate`, {
+      method: 'POST',
+      body: JSON.stringify({ scenario, avg_base_salary: avgBaseSalary }),
+    });
+  }
+
+  async addRequisitionForecast(
+    planId: string,
+    data: { role_title: string; job_level: string; target_quarter: string; estimated_base_salary: number }
+  ): Promise<RequisitionForecast> {
+    return this.request<RequisitionForecast>(`/workforce-planning/plans/${planId}/requisitions`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async syncRequisitionToRecruiter(reqId: string): Promise<any> {
+    return this.request(`/workforce-planning/requisitions/${reqId}/sync-recruiter`, {
+      method: 'POST',
+    });
+  }
+
+  async getWorkforcePlanningSummary(): Promise<WorkforcePlanningSummary> {
+    return this.request<WorkforcePlanningSummary>('/workforce-planning/summary');
   }
 }
 

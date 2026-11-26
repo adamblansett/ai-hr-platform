@@ -1,3 +1,30 @@
+# Release v2.1.0 — `ai-hr-platform` (Production Hardening & Enterprise Expansion)
+
+**Release Date:** November 26, 2026  
+**License:** Apache 2.0  
+**Status:** Production Ready  
+
+Version 2.1.0 unites end-to-end production hardening across database migrations, Redis-backed authentication & rate limiting, and Prometheus observability with major enterprise capabilities: Federated SSO (SAML 2.0 / OIDC) + RFC 6238 TOTP MFA, an Event-Driven Notification & Digest Engine, and AI Workforce Planning with `ai-recruiter` sync.
+
+---
+
+## 🔒 Production Hardening (Track A)
+
+- **Complete Enterprise Alembic Schema (`0002_v2_1_enterprise_schema.py`)**: Aligned foreign-key UUID column types across 13 domain models and added full migration coverage for all v1.1–v2.1 tables (`alembic upgrade head` verified in CI).
+- **Redis-Backed Auth Revocation, Logout & Refresh Rotation**: Upgraded `revoke_token_jti` / `is_jti_revoked` to Redis with TTL + thread-safe in-memory fallback, added `POST /api/v1/auth/logout`, and enforced refresh token rotation in `POST /api/v1/auth/refresh`.
+- **Redis Scoped Rate Limiting**: Added sliding/fixed-window Redis rate limiter (`rate_limit`) protecting `/auth/login` and `/policies/chat` with standard `X-RateLimit-*` and `Retry-After` headers.
+- **Prometheus & Kubernetes Probes**: Replaced in-memory `/metrics` with `prometheus-client` exposition (`ai_hr_http_requests_total`, `ai_hr_http_request_duration_seconds`, `ai_hr_http_requests_in_flight`), added `/health/live` & `/health/ready` (checking PostgreSQL + Redis), and added structured JSON logging with `X-Request-ID` correlation IDs.
+- **Grouped Sidebar Navigation & Code Splitting**: Added History API URL routing (`useRoute`), a searchable collapsible left sidebar, and `React.lazy` route-level Vite chunk splitting.
+
+## 🚀 New Enterprise Features (Track B)
+
+- **Enterprise SSO (SAML 2.0 / OIDC) & TOTP MFA (`/api/v1/security`, `SecuritySsoMfaView`)**: PKCE `S256` OIDC handshakes, XXE-hardened SAML 2.0 XML response parsing via `defusedxml`, and RFC 6238 TOTP provisioning with hashed backup recovery codes.
+- **Event-Driven Notification & Digest Engine (`/api/v1/notifications`, `NotificationsCenterView`)**: Multi-channel inbox (`EMAIL`, `SLACK`, `TEAMS`, `IN_APP`) with Celery Beat scheduled daily HR digests and visa/compliance expiration scans.
+- **AI Workforce Planning & Headcount Forecasting (`/api/v1/workforce-planning`, `WorkforcePlanningView`)**: Departmental headcount modeling (1.28x fully-loaded cost multiplier), Conservative/Baseline/Hypergrowth scenario simulation, and HMAC-SHA256 signed `ai-recruiter` requisition syncing.
+- **Python & TypeScript SDK Parity (`v2.1.0`)**: Updated `packages/ai-hr-sdk-python`, `packages/ai-hr-sdk-ts`, and `docs/api_collection.json`.
+
+---
+
 # Release v2.0.1 — `ai-hr-platform` (Security & Quality Patch)
 
 **Release Date:** November 22, 2026  

@@ -1,7 +1,9 @@
+import uuid
 from datetime import datetime
 from enum import Enum
 from typing import Optional, List
 from sqlalchemy import String, DateTime, Float, ForeignKey, Boolean
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from backend.app.core.database import Base
 
@@ -40,7 +42,7 @@ class ImmigrationCase(Base):
     __tablename__ = "immigration_cases"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
-    employee_id: Mapped[str] = mapped_column(String(36), ForeignKey("employees.id"), nullable=False)
+    employee_id: Mapped[uuid.UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey("employees.id", ondelete="CASCADE"), nullable=False)
     visa_type: Mapped[str] = mapped_column(String(30), default=VisaType.H1B.value)
     case_status: Mapped[str] = mapped_column(String(30), default=CaseStatus.INTAKE.value)
     uscis_receipt_number: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)

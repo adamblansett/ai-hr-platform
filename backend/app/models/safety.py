@@ -1,7 +1,9 @@
+import uuid
 from datetime import datetime
 from enum import Enum
 from typing import Optional
 from sqlalchemy import String, DateTime, Integer, ForeignKey, Text, Boolean
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column
 from backend.app.core.database import Base
 
@@ -34,7 +36,7 @@ class SafetyIncident(Base):
     __tablename__ = "safety_incidents"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
-    employee_id: Mapped[str] = mapped_column(String(36), ForeignKey("employees.id"), nullable=False)
+    employee_id: Mapped[uuid.UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey("employees.id", ondelete="CASCADE"), nullable=False)
     incident_type: Mapped[str] = mapped_column(String(30), default=IncidentType.INJURY.value)
     severity: Mapped[str] = mapped_column(String(30), default=IncidentSeverity.FIRST_AID.value)
     incident_date: Mapped[str] = mapped_column(String(10), nullable=False)

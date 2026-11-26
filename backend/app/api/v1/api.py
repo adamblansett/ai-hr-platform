@@ -29,6 +29,9 @@ from backend.app.api.v1.endpoints.contractors import router as contractors_route
 from backend.app.api.v1.endpoints.benchmarking import router as benchmarking_router
 from backend.app.api.v1.endpoints.immigration import router as immigration_router
 from backend.app.api.v1.endpoints.tenant_branding import router as tenant_branding_router
+from backend.app.api.v1.endpoints.sso_mfa import router as sso_mfa_router
+from backend.app.api.v1.endpoints.notifications import router as notifications_router
+from backend.app.api.v1.endpoints.workforce_planning import router as workforce_planning_router
 
 api_router = APIRouter()
 
@@ -62,4 +65,7 @@ api_router.include_router(contractors_router, prefix="/contractors", tags=["Glob
 api_router.include_router(benchmarking_router, prefix="/benchmarking", tags=["Salary Benchmarking & Market Intelligence"])
 api_router.include_router(immigration_router, prefix="/immigration", tags=["Visa, Immigration & Relocation Management"])
 api_router.include_router(tenant_branding_router, prefix="/branding", tags=["Multi-Tenant White-Labeling & Domain Routing"])
+api_router.include_router(sso_mfa_router, prefix="/security", tags=["Enterprise SSO (SAML/OIDC) & TOTP MFA"])
+api_router.include_router(notifications_router, prefix="/notifications", tags=["Event-Driven Notifications & HR Digests"])
+api_router.include_router(workforce_planning_router, prefix="/workforce-planning", tags=["AI Workforce Planning & Headcount Forecasting"])
 

@@ -5,7 +5,8 @@ from sqlalchemy import select, distinct
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.app.api.deps import get_db, get_current_user, require_role
-from backend.app.core.rate_limit import check_ai_rate_limit
+from backend.app.core.config import settings
+from backend.app.core.rate_limit import rate_limit
 from backend.app.models.employee import Employee, EmployeeRole
 from backend.app.models.policy import PolicyDocument, PolicyAcknowledgment
 from backend.app.schemas.policy import (
@@ -51,11 +52,15 @@ async def upload_policy(
     )
     return docs
 
-@router.post("/chat", response_model=PolicyAnswerResponse, summary="Grounded Policy RAG Q&A Assistant")
+@router.post(
+    "/chat",
+    response_model=PolicyAnswerResponse,
+    summary="Grounded Policy RAG Q&A Assistant",
+    dependencies=[Depends(rate_limit("policy_chat", settings.RATE_LIMIT_AI_PER_MINUTE, 60))],
+)
 async def chat_policy_rag(
     request_data: PolicyQuestionRequest,
     current_user: Employee = Depends(get_current_user),
-    _rate_limit: None = Depends(check_ai_rate_limit),
     db: AsyncSession = Depends(get_db)
 ):
     return await policy_rag_service.query_policy_rag(

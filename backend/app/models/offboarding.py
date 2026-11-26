@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime, timezone, date
 from sqlalchemy import Column, String, DateTime, Date, ForeignKey, Boolean, JSON, Integer, Text
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 from backend.app.core.database import Base
 
@@ -9,10 +10,10 @@ class OffboardingRecord(Base):
     __tablename__ = "offboarding_records"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    organization_id = Column(String(36), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True)
-    employee_id = Column(String(36), ForeignKey("employees.id", ondelete="CASCADE"), nullable=False, index=True)
+    organization_id = Column(PG_UUID(as_uuid=True), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True)
+    employee_id = Column(PG_UUID(as_uuid=True), ForeignKey("employees.id", ondelete="CASCADE"), nullable=False, index=True)
     
-    initiator_id = Column(String(36), ForeignKey("employees.id"), nullable=True)
+    initiator_id = Column(PG_UUID(as_uuid=True), ForeignKey("employees.id", ondelete="SET NULL"), nullable=True)
     last_working_day = Column(Date, nullable=False)
     termination_reason = Column(String(50), default="VOLUNTARY_RESIGNATION") # VOLUNTARY_RESIGNATION, INVOLUNTARY_TERMINATION, RETIREMENT, CONTRACT_END
     status = Column(String(30), default="IN_PROGRESS") # IN_PROGRESS, COMPLETED, CANCELLED
@@ -50,7 +51,7 @@ class ExitInterviewFeedback(Base):
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     offboarding_id = Column(String(36), ForeignKey("offboarding_records.id", ondelete="CASCADE"), nullable=False, index=True)
-    employee_id = Column(String(36), ForeignKey("employees.id", ondelete="CASCADE"), nullable=False, index=True)
+    employee_id = Column(PG_UUID(as_uuid=True), ForeignKey("employees.id", ondelete="CASCADE"), nullable=False, index=True)
     
     primary_reason = Column(String(100), nullable=False)
     experience_rating = Column(Integer, default=4) # 1-5 scale

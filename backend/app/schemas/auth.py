@@ -23,6 +23,13 @@ class LoginRequest(BaseModel):
 class RefreshTokenRequest(BaseModel):
     refresh_token: str
 
+class LogoutRequest(BaseModel):
+    refresh_token: Optional[str] = None
+
+class LogoutResponse(BaseModel):
+    status: str = "logged_out"
+    revoked_tokens: int = 1
+
 class CurrentUserResponse(BaseModel):
     id: uuid.UUID
     organization_id: uuid.UUID

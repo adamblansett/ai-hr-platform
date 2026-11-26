@@ -1,7 +1,9 @@
+import uuid
 from datetime import datetime
 from enum import Enum
 from typing import Optional
 from sqlalchemy import String, DateTime, ForeignKey, Text, Boolean
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column
 from backend.app.core.database import Base
 
@@ -45,7 +47,7 @@ class HardwareAsset(Base):
     device_model: Mapped[str] = mapped_column(String(100), nullable=False)
     category: Mapped[str] = mapped_column(String(30), default=AssetCategory.LAPTOP.value)
     status: Mapped[str] = mapped_column(String(30), default=AssetStatus.IN_STOCK.value)
-    assigned_to_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("employees.id"), nullable=True)
+    assigned_to_id: Mapped[Optional[uuid.UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey("employees.id", ondelete="SET NULL"), nullable=True)
     assigned_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
     purchase_date: Mapped[str] = mapped_column(String(10), nullable=False)
     warranty_expiry: Mapped[str] = mapped_column(String(10), nullable=False)
